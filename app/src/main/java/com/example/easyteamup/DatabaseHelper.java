@@ -9,6 +9,10 @@ import androidx.annotation.Nullable;
 
 import com.example.easyteamup.classes.User;
 
+/**
+ * Author: Andy C
+ */
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String USER_TABLE = "USER_TABLE";
