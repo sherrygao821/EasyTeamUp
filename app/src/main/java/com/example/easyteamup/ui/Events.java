@@ -55,6 +55,8 @@ public class Events extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        getEventList();
     }
 
     @Override
@@ -62,5 +64,9 @@ public class Events extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_events, container, false);
+    }
+
+    private void getEventList() {
+        // TODO: Retrieve List of Events that is near the user
     }
 }

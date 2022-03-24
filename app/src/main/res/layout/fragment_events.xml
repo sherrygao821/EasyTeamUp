@@ -5,14 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.Events">
 
-<!--    <ListView-->
-<!--        android:id="@+id/eventsListView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent" />-->
-    <TextView
+    <ListView
+        android:id="@+id/eventsListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="This is Events Page" />
+        android:layout_height="match_parent" />
+
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:gravity="center"-->
+<!--        android:text="This is Events Page" />-->
 
 </FrameLayout>
