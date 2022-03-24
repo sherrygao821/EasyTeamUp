@@ -1,4 +1,4 @@
-package com.example.easyteamup;
+package com.example.easyteamup.classes;
 
 public class User {
     private int userId;
@@ -9,8 +9,12 @@ public class User {
     private String userPwd;
     private String firstName;
     private String lastName;
+    private String email;
+    private String pwd;
 
-    public User(int userId, int gender, int age, boolean isStudent, String userName, String userPwd, String firstName, String lastName) {
+    public User (){}
+
+    public User(int userId, int gender, int age, boolean isStudent, String userName, String userPwd, String firstName, String lastName, String email, String pwd) {
         this.userId = userId;
         this.gender = gender;
         this.age = age;
@@ -19,11 +23,13 @@ public class User {
         this.userPwd = userPwd;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.pwd = pwd;
+        this.email = email;
     }
 
     @Override
     public String toString() {
-        return "Data{" +
+        return "User{" +
                 "userId=" + userId +
                 ", gender=" + gender +
                 ", age=" + age +
@@ -32,6 +38,8 @@ public class User {
                 ", userPwd='" + userPwd + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", pwd='" + pwd + '\'' +
                 '}';
     }
 
@@ -97,6 +105,22 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
 }
 

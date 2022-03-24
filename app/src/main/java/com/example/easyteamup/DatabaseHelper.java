@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.example.easyteamup.classes.User;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String USER_TABLE = "USER_TABLE";
@@ -15,8 +17,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_AGE = "AGE";
     public static final String COLUMN_GENDER = "GENDER";
 
-    public DatabaseHelper(@Nullable Context context) {
-        super(context, "users.db", null, 1);
+    //name: "user.db"
+    public DatabaseHelper(@Nullable Context context, String name) {
+        super(context, name, null, 1);
     }
 
     //called when accessed for the first time
@@ -31,8 +34,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    //add user to db
-    public boolean addOne(User user){
+    //add user to db one at a time
+    public boolean addUser(User user){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
