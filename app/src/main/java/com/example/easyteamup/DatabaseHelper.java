@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.example.easyteamup.classes.Event;
 import com.example.easyteamup.classes.User;
 
 /**
@@ -15,22 +16,35 @@ import com.example.easyteamup.classes.User;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+    //User Table static constants
     public static final String USER_TABLE = "USER_TABLE";
     public static final String COLUMN_NAME = "NAME";
     public static final String COLUMN_ID = "ID";
     public static final String COLUMN_AGE = "AGE";
     public static final String COLUMN_GENDER = "GENDER";
 
-    //name: "user.db"
-    public DatabaseHelper(@Nullable Context context, String name) {
-        super(context, name, null, 1);
+    //Event Table static constants
+    public static final String EVENT_TABLE = "EVENT_TABLE";
+    public static final String COLUMN_EVT_NAME = "EVT_NAME";
+    public static final String COLUMN_EVT_ID = "EVT_ID";
+    public static final String COLUMN_HOST_ID = "HOST_ID";
+    public static final String COLUMN_TIME = "TIME";
+    public static final String COLUMN_LOCATION = "LOCATION";
+    public static final String COLUMN_EVT_TYPE = "TYPE";
+    public static final String COLUMN_TIMESLOTS = "TIMESLOTS";
+    public static final String COLUMN_PARTICIPANTS = "PARTICIPANTS";
+
+    //name: "Database.db"
+    public DatabaseHelper(@Nullable Context context) {
+        super(context, "Database.db", null, 1);
     }
 
     //called when accessed for the first time
     //creating new DB
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_GENDER + " INT)";
+        String createUserTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_GENDER + " INT)";
+        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, "  + COLUMN_EVT_TYPE + " INT)";
     }
     //call when updated/version changes
     @Override
@@ -49,6 +63,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //-1 if failed to insert
         long insert = db.insert(USER_TABLE,null, cv);
+
+        if (insert == -1) return false;
+        return true;
+    }
+
+    //add event to db one at a time
+    public boolean addEvent (Event event){
+        SQLiteDatabase db = this .getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_EVT_NAME, event.getEvtName());
+        cv.put(COLUMN_EVT_ID, event.getEvtId());
+        cv.put(COLUMN_HOST_ID, event.getHostId());
+        cv.put(COLUMN_TIME, event.getEvtTime().toString());
+        cv.put(COLUMN_LOCATION, event.getEvtLocation());
+        cv.put(COLUMN_EVT_TYPE, event.getEvtType());
+        cv.put(COLUMN_TIMESLOTS, event.getEvtTimeSlots().toString());
+        cv.put(COLUMN_PARTICIPANTS, event.getEvtParticipants().toString());
+
+        //-1 if failed to insert
+        long insert = db.insert(EVENT_TABLE,null, cv);
 
         if (insert == -1) return false;
         return true;
