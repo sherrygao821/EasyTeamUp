@@ -10,4 +10,10 @@
     <string name="noParticipants">Number of Participants:</string>
     <string name="contactEmail">Contact Email:</string>
     <string name='signup'>Sign Up For This Event</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="user_name">User Name</string>
+    <string name="evt_type">Type</string>
+    <string name="evt_name">Event Name</string>
+    <string name="evt_time">@ TBD</string>
 </resources>
