@@ -79,7 +79,7 @@ public class Events extends Fragment {
     private void getEventList() {
         // TODO: Connect with Database
         for(int i = 0; i < 5; i++) {
-            Event e = new Event(i, "Run On the Beach", 1,0);
+            Event e = new Event(i, "Run On the Beach " + String.valueOf(i), 0, "I really want to run on the beach, but I could not find someone who also wants to run on the beach.", "11:59PM 3/31", null, "Santa Monica Beach", new HashMap<String, Integer>(), new ArrayList<String>(), 0, true, true);
             allEvents.add(e);
         }
     }

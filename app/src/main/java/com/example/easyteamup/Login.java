@@ -106,6 +106,8 @@ public class Login extends AppCompatActivity {
         else {
             User user = new User();
             user.setUserId(cursor.getInt(0));
+            user.setEmail(enteredEmail);
+            user.setUserPwd(enteredPass);
             // TODO: uncomment after user table updated
 //            user.setUserId(cursor.getString(1));
             ((MyApplication) this.getApplication()).setUser(user);

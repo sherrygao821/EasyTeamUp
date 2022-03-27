@@ -18,8 +18,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_gravity="center"
-            android:background="@color/green">
+            android:layout_gravity="center">
             <ImageView
                 android:id="@+id/evtDetailUserPic"
                 android:layout_width="62dp"
@@ -29,6 +28,7 @@
                 android:id="@+id/evtDetailUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@string/app_name"
                 android:textColor="@color/font_grey"
                 android:textSize="24sp"
