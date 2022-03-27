@@ -26,13 +26,18 @@ public class Events extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         this.allEvents = new ArrayList<>();
-
-        getEventList();
-
     }
 
+
+    /**
+     * Set Adapter for the home page list view
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return rootView
+     * @author Sherry Gao
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

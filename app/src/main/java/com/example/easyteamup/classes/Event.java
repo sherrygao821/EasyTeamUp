@@ -17,9 +17,9 @@ public class Event {
     private boolean isPublic;
 
     // Use this constructor for other parts of coding before connecting to database
-    public Event(int evtId, String evtDescription, int hostId, int evtType) {
+    public Event(int evtId, String evtName, int hostId, int evtType) {
         this.evtId = evtId;
-        this.evtDescription = evtDescription;
+        this.evtName = evtName;
         this.hostId = hostId;
         this.evtType = evtType;
     }

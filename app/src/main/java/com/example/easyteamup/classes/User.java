@@ -21,6 +21,11 @@ public class User {
 
     public User (){}
 
+    public User(String email, String userPwd) {
+        Email = email;
+        this.userPwd = userPwd;
+    }
+
     public User(int age, boolean isStudent, String Email, String userPwd, String firstName, String lastName) {
         this.age = age;
         this.isStudent = isStudent;
