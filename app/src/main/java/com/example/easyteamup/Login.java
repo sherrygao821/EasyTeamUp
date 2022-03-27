@@ -3,6 +3,7 @@ package com.example.easyteamup;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +24,15 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        boolean isLoggedIn = ((MyApplication) this.getApplication()).isLoggedIn();
+
+        // check log in status
+        if(isLoggedIn) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            return;
+        }
+
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         button = findViewById(R.id.loginButton);
@@ -31,6 +41,11 @@ public class Login extends AppCompatActivity {
         button.setOnClickListener(this::onClick);
     }
 
+    /**
+     * On click listener for the log in / sign up button
+     * @param v
+     * @author Sherry Gao
+     */
     public void onClick(View v) {
         String enteredEmail = email.getText().toString();
         String enteredPass = password.getText().toString();
@@ -41,17 +56,24 @@ public class Login extends AppCompatActivity {
             login(enteredEmail, enteredPass);
     }
 
+    /**
+     * Log in / Sign up function with database connection
+     * @param enteredEmail
+     * @param enteredPass
+     * @author Sherry Gao
+     */
     private void login(String enteredEmail, String enteredPass) {
         boolean checkUser = db.checkUser(enteredEmail);
 
         // log in
         if(checkUser) {
-            boolean checkUsernamePassword = db.checkUsernamePassword(enteredEmail, enteredPass);
+            Cursor cursor = db.checkUsernamePassword(enteredEmail, enteredPass);
             // log in succeeded
-            if(checkUsernamePassword) {
+            if(cursor != null) {
+                saveUserInfo(cursor, enteredEmail, enteredPass);
+                Log.d("LOGIN", "Log in succeeded");
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
-                Log.d("LOGIN", "Log in succeeded");
             }
             // log in failed
             else {
@@ -63,13 +85,30 @@ public class Login extends AppCompatActivity {
         else {
             User user = new User(enteredEmail, enteredPass);
             db.addUser(user);
-
+            saveUserInfo(null, enteredEmail, enteredPass);
             Log.d("LOGIN", "Sign up succeeded");
-
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
     }
 
-
+    /**
+     * Retrieve and save user info to global variable
+     * @param cursor
+     * @param enteredEmail
+     * @param enteredPass
+     */
+    private void saveUserInfo(Cursor cursor, String enteredEmail, String enteredPass) {
+        if(cursor == null) {
+            User user = new User(enteredEmail, enteredPass);
+            ((MyApplication) this.getApplication()).setUser(user);
+        }
+        else {
+            User user = new User();
+            user.setUserId(cursor.getInt(0));
+            // TODO: uncomment after user table updated
+//            user.setUserId(cursor.getString(1));
+            ((MyApplication) this.getApplication()).setUser(user);
+        }
+    }
 }

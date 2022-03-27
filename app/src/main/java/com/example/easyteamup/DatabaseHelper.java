@@ -35,6 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STUDENT = "STUDENT";
     public static final String COLUMN_EMAIL = "EMAIL";
     public static final String COLUMN_PWD = "PWD";
+    public static final String COLUMN_PHOTO = "PHOTO";
 
 
 
@@ -96,7 +97,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean checkUser(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM USER_TABLE WHERE EMAIL = ?", new String[] {username});
+//        Cursor cursor = db.rawQuery("SELECT ID, PHOTO FROM USER_TABLE WHERE EMAIL = ?", new String[] {username});
+        Cursor cursor = db.rawQuery("SELECT ID FROM USER_TABLE WHERE EMAIL = ?", new String[] {username});
         if(cursor.getCount() > 0)
             return true;
         else
@@ -110,13 +112,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return
      * @author Sherry Gao
      */
-    public boolean checkUsernamePassword(String username, String password) {
+    public Cursor checkUsernamePassword(String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM USER_TABLE WHERE EMAIL = ? AND PWD = ?", new String[] {username, password});
-        if(cursor.getCount() > 0)
-            return true;
+        if (cursor != null) {
+            cursor.moveToFirst();
+            return cursor;
+        }
         else
-            return false;
+            return null;
     }
 
     //add event to db one at a time

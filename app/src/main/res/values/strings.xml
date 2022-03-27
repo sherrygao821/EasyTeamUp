@@ -5,4 +5,9 @@
     <string name="email">email</string>
     <string name="password">password</string>
     <string name="login">Log In / Sign Up</string>
+    <string name="timeslot">Event Time Slots Available:</string>
+    <string name="location">Event Location:</string>
+    <string name="noParticipants">Number of Participants:</string>
+    <string name="contactEmail">Contact Email:</string>
+    <string name='signup'>Sign Up For This Event</string>
 </resources>

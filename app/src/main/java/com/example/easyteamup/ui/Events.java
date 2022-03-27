@@ -1,17 +1,22 @@
 package com.example.easyteamup.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.easyteamup.EventAdapter;
+import com.example.easyteamup.EventDetail;
 import com.example.easyteamup.R;
 import com.example.easyteamup.classes.*;
+import com.google.gson.Gson;
 
 import java.util.*;
 
@@ -28,7 +33,6 @@ public class Events extends Fragment {
         super.onCreate(savedInstanceState);
         this.allEvents = new ArrayList<>();
     }
-
 
     /**
      * Set Adapter for the home page list view
@@ -51,9 +55,22 @@ public class Events extends Fragment {
         getEventList();
         eventsListView.setAdapter(new EventAdapter(getActivity(), R.layout.item_event, allEvents));
 
+        eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                Log.d("EVENT_CLICK", String.valueOf(position));
+
+                // initiate Event Detail Page w Event Data
+                Intent intent = new Intent(getActivity(), EventDetail.class);
+                String eventInfo = new Gson().toJson(allEvents.get(position - 1));
+                intent.putExtra("eventInfo", eventInfo);
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
-
 
     /**
      * Get the list of events available from the database
