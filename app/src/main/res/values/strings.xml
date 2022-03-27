@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Easy Team Up</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="image_description">image description</string>
     <string name="email">email</string>
     <string name="password">password</string>
@@ -10,10 +9,13 @@
     <string name="noParticipants">Number of Participants:</string>
     <string name="contactEmail">Contact Email:</string>
     <string name='signup'>Sign Up For This Event</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="user_name">User Name</string>
     <string name="evt_type">Type</string>
     <string name="evt_name">Event Name</string>
-    <string name="evt_time">@ TBD</string>
+    <string name="evt_time">TBD</string>
+    <string name="selectTimeSlots">Select All Time Slots That Suit You!</string>
+    <string name="signupBut">Sign Up</string>
+    <string name="newEvent">New Event</string>
+    <string name="evtName">Event Name</string>
 </resources>

@@ -24,15 +24,6 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        boolean isLoggedIn = ((MyApplication) this.getApplication()).isLoggedIn();
-
-        // check log in status
-        if(isLoggedIn) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            return;
-        }
-
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         button = findViewById(R.id.loginButton);
@@ -46,7 +37,7 @@ public class Login extends AppCompatActivity {
      * @param v
      * @author Sherry Gao
      */
-    public void onClick(View v) {
+    private void onClick(View v) {
         String enteredEmail = email.getText().toString();
         String enteredPass = password.getText().toString();
 
@@ -99,6 +90,7 @@ public class Login extends AppCompatActivity {
      * @param enteredPass
      */
     private void saveUserInfo(Cursor cursor, String enteredEmail, String enteredPass) {
+        ((MyApplication) this.getApplication()).setLoggedIn(true);
         if(cursor == null) {
             User user = new User(enteredEmail, enteredPass);
             ((MyApplication) this.getApplication()).setUser(user);
@@ -108,6 +100,7 @@ public class Login extends AppCompatActivity {
             user.setUserId(cursor.getInt(0));
             user.setEmail(enteredEmail);
             user.setUserPwd(enteredPass);
+
             // TODO: uncomment after user table updated
 //            user.setUserId(cursor.getString(1));
             ((MyApplication) this.getApplication()).setUser(user);

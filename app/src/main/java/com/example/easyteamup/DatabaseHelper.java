@@ -5,13 +5,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.example.easyteamup.classes.Event;
 import com.example.easyteamup.classes.Notification;
 import com.example.easyteamup.classes.User;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,10 +121,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor checkUsernamePassword(String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM USER_TABLE WHERE EMAIL = ? AND PWD = ?", new String[] {username, password});
-        if (cursor != null) {
-            cursor.moveToFirst();
+        if (cursor.moveToFirst())
             return cursor;
-        }
         else
             return null;
     }
@@ -149,6 +151,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (insert == -1) return false;
         return true;
+    }
+
+    /**
+     * Add user to event participants list
+     * @param evtId
+     * @param userEmail
+     * @return boolean
+     * @author Sherry Gao
+     */
+    public boolean signUpEvent(int evtId, String userEmail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_ID = ?", new String[] {String.valueOf(evtId)});
+
+        if(cursor.moveToFirst()) {
+            String participantsString = cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS"));
+            Type type = new TypeToken<List<String>>() {}.getType();
+            List<String> participantsList = new Gson().fromJson(participantsString, type);
+            Log.d("DB", participantsString);
+
+            participantsList.add(userEmail);
+            participantsString = new Gson().toJson(participantsList);
+            Log.d("DB", participantsString);
+
+            ContentValues cv = new ContentValues();
+            cv.put("PARTICIPANTS", participantsString);
+            db.update(EVENT_TABLE, cv, "EVT_ID" + "= ?", new String[] {String.valueOf(evtId)});
+
+            return true;
+        }
+        else
+            return false;
     }
 
     //add notification to table

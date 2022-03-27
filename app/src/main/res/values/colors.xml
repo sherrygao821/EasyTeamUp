@@ -9,4 +9,5 @@
     <color name="font_grey">#626262</color>
     <color name="background_grey">#F6F6F6</color>
     <color name="tag_blue">#B0ECFF</color>
+    <color name="add_button_green">#90D9A0</color>
 </resources>
