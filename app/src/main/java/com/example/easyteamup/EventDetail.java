@@ -59,7 +59,6 @@ public class EventDetail extends AppCompatActivity {
      * @author Sherry Gao
      */
     private void onClick(View v) {
-
         List<String> participants = event.getEvtParticipants();
         String userEmail = (((MyApplication) this.getApplication()).getUser().getEmail());
 
@@ -84,17 +83,13 @@ public class EventDetail extends AppCompatActivity {
      * @author Sherry Gao
      */
     private void setEventInfo() {
-
-        String email = ((MyApplication) this.getApplication()).getUser().getEmail();
-        Log.d("GLOBAL_VARIABLE", new Gson().toJson(((MyApplication) this.getApplication()).getUser()));
-
-        evtDetailUserName.setText(email);
+        evtDetailUserName.setText(String.valueOf(event.getHostId()));
         evtDeadline.setText(event.getEvtSignUpDueDate());
         evtDetailType.setText(String.valueOf(event.getEvtType()));
         evtDetailDescript.setText(event.getEvtDescription());
         evtDetailLoc.setText(event.getEvtLocation());
         evtDetailNoP.setText(String.valueOf(event.getEvtParticipants().size()));
-        evtDetailEmail.setText(email);
+        evtDetailEmail.setText(String.valueOf(event.getHostId()));
 //        evtDetailUserPic.setImageResource();
     }
 }

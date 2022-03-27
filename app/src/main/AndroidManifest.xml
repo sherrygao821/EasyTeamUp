@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EasyTeamUp">
         <activity
+            android:name=".CreateEvent"
+            android:exported="false" />
+        <activity
             android:name=".SignUpPop"
             android:exported="false" />
         <activity
@@ -27,8 +30,7 @@
         </activity>
         <activity
             android:name=".Login"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
     </application>
 
 </manifest>

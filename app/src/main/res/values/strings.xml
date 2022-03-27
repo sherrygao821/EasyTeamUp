@@ -12,4 +12,6 @@
     <string name='signup'>Sign Up For This Event</string>
     <string name="selectTimeSlots">Select All Time Slots That Suit You!</string>
     <string name="signupBut">Sign Up</string>
+    <string name="newEvent">New Event</string>
+    <string name="evtName">Event Name</string>
 </resources>

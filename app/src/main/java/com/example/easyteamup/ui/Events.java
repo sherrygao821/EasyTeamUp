@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.example.easyteamup.CreateEvent;
 import com.example.easyteamup.EventAdapter;
 import com.example.easyteamup.EventDetail;
 import com.example.easyteamup.R;
@@ -21,6 +23,9 @@ import com.google.gson.Gson;
 import java.util.*;
 
 public class Events extends Fragment {
+
+    ListView eventsListView;
+    ImageView addEventButton;
 
     private List<Event> allEvents;
 
@@ -49,7 +54,7 @@ public class Events extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_events, container, false);
 
         // Add adapter to the home page list view
-        ListView eventsListView = rootView.findViewById(R.id.eventsListView);
+        eventsListView = rootView.findViewById(R.id.eventsListView);
         eventsListView.addHeaderView(new View(getActivity()));
         eventsListView.addFooterView(new View(getActivity()));
         getEventList();
@@ -70,7 +75,21 @@ public class Events extends Fragment {
             }
         });
 
+        addEventButton = rootView.findViewById(R.id.addEventButton);
+        addEventButton.setOnClickListener(this::onClick);
+
         return rootView;
+    }
+
+    /**
+     * Switch to create event activity
+     * @param v
+     * @author Sherry Gao
+     */
+    private void onClick(View v) {
+        Intent intent = new Intent(getActivity(), CreateEvent.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
     }
 
     /**
