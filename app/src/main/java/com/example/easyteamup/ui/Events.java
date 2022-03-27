@@ -63,6 +63,7 @@ public class Events extends Fragment {
 
                 // initiate Event Detail Page w Event Data
                 Intent intent = new Intent(getActivity(), EventDetail.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                 String eventInfo = new Gson().toJson(allEvents.get(position - 1));
                 intent.putExtra("eventInfo", eventInfo);
                 startActivity(intent);
