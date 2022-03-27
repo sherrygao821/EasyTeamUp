@@ -7,4 +7,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#83ACA2</color>
     <color name="font_grey">#626262</color>
+    <color name="background_grey">#F6F6F6</color>
+    <color name="tag_blue">#B0ECFF</color>
 </resources>

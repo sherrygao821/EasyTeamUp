@@ -2,6 +2,7 @@ package com.example.easyteamup;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -101,6 +102,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (insert == -1) return false;
         return true;
+    }
+
+    /**
+     * Check whether the user email is already in database
+     * @param username
+     * @return
+     * @author Sherry Gao
+     */
+    public boolean checkUser(String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM USER_TABLE WHERE EMAIL = ?", new String[] {username});
+        if(cursor.getCount() > 0)
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * Check whether user email and password matches
+     * @param username
+     * @param password
+     * @return
+     * @author Sherry Gao
+     */
+    public boolean checkUsernamePassword(String username, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM USER_TABLE WHERE EMAIL = ? AND PWD = ?", new String[] {username, password});
+        if(cursor.getCount() > 0)
+            return true;
+        else
+            return false;
     }
 
     //add event to db one at a time
