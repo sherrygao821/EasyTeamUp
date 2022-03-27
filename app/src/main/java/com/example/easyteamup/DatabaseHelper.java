@@ -9,21 +9,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.example.easyteamup.classes.Event;
+import com.example.easyteamup.classes.Notification;
 import com.example.easyteamup.classes.User;
 
-/**
- * Author: Andy C
- *
- * Instruction:
- *
- * DatabaseHelper dbhelper = new DatabaseHelper(MainActivity.this);
- *
- * boolean success = dbhelper.addUser(User u1);
- *  OR
- * boolean sucesss = dbhelper.addEvent(Event e1);
- *
- *
- */
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -37,8 +27,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PWD = "PWD";
     public static final String COLUMN_PHOTO = "PHOTO";
 
-
-
     //Event Table static constants
     public static final String EVENT_TABLE = "EVENT_TABLE";
     public static final String COLUMN_EVT_NAME = "EVT_NAME";
@@ -49,6 +37,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EVT_TYPE = "TYPE";
     public static final String COLUMN_TIMESLOTS = "TIMESLOTS";
     public static final String COLUMN_PARTICIPANTS = "PARTICIPANTS";
+
+    //Notification Table constants;
+    public static final String NOTIFICATION_TABLE = "NOTIFICATION_TABLE";
+    public static final String COLUMN_NOTIFICATION_ID = "NOTI_ID";
+    public static final String COLUMN_FROM_ID = "FROM_ID";
+    public static final String COLUMN_TO_ID = "TO_ID";
+    public static final String COLUMN_NOTIFICATION_TYPE = "TYPE";
 
     //name: "Database.db"
     public DatabaseHelper(@Nullable Context context) {
@@ -61,9 +56,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createUserTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PWD + " TEXT, " + COLUMN_STUDENT + " INT)";
         String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, "  + COLUMN_EVT_TYPE + " INT)";
+        String createNotiTableStatement = "CREATE TABLE " + NOTIFICATION_TABLE + " (" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_ID + " INT, " + COLUMN_FROM_ID + " INT, " + COLUMN_TO_ID + " INT, " + COLUMN_NOTIFICATION_TYPE + " INT)";
 
         db.execSQL(createUserTableStatement);
         db.execSQL(createEventTableStatement);
+        db.execSQL(createNotiTableStatement);
     }
     //call when updated/version changes
     @Override
@@ -71,7 +68,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    //add user to db one at a time
+    /**
+     * Add user to db
+     * @param user
+     * @return boolean
+     * @author Andy
+     */
     public boolean addUser(User user){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -123,7 +125,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return null;
     }
 
-    //add event to db one at a time
+    /**
+     * Add event to db one at a time
+     * @param event
+     * @return boolean
+     * @author Andy
+     */
     public boolean addEvent (Event event){
         SQLiteDatabase db = this .getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -143,4 +150,64 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (insert == -1) return false;
         return true;
     }
+
+    //add notification to table
+
+    /**
+     * Add notification to table
+     * @param noti
+     * @return boolean
+     * @author Andy
+     */
+    public boolean addNoti(Notification noti){
+        SQLiteDatabase db = this .getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_EVT_ID, noti.getEventID());
+        cv.put(COLUMN_FROM_ID, noti.getFrom());
+        cv.put(COLUMN_TO_ID, noti.getTo());
+        cv.put(COLUMN_NOTIFICATION_TYPE, noti.getType());
+
+        long insert = db.insert(NOTIFICATION_TABLE,null, cv);
+
+        if (insert == -1) return false;
+        return true;
+    }
+
+    /**
+     * get notifications sent to specified user
+     * @param user
+     * @return list of notification
+     * @author Andy
+     */
+    public List<Notification> getNotification(User user){
+
+        List<Notification> notiList = new ArrayList<>();
+        int ID = user.getUserId();
+
+        //get data from notification table
+        String queryString = "SELECT * FROM " + NOTIFICATION_TABLE;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(queryString,null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int tempID = cursor.getInt(3);
+                if (tempID != ID) continue;
+                Notification temp = new Notification(cursor.getInt(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4));
+                notiList.add(temp);
+            } while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return notiList;
+    }
+
+
+    //
+
+
 }
