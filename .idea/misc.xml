@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/drawable/navbar.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/round_corners.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/tag_round_corners.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/timeslot_round_corners.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.29322916666666665" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2409408569335938" />
         <entry key="app/src/main/res/layout/fragment_events.xml" value="0.24544033350703492" />

@@ -10,4 +10,6 @@
     <string name="noParticipants">Number of Participants:</string>
     <string name="contactEmail">Contact Email:</string>
     <string name='signup'>Sign Up For This Event</string>
+    <string name="selectTimeSlots">Select All Time Slots That Suit You!</string>
+    <string name="signupBut">Sign Up</string>
 </resources>

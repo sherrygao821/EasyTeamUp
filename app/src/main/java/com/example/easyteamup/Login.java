@@ -46,7 +46,7 @@ public class Login extends AppCompatActivity {
      * @param v
      * @author Sherry Gao
      */
-    public void onClick(View v) {
+    private void onClick(View v) {
         String enteredEmail = email.getText().toString();
         String enteredPass = password.getText().toString();
 
