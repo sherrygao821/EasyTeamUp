@@ -2,13 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:layout_width="match_parent">
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/event_round_corners"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
 
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp">
         <ImageView
             android:id="@+id/evtUserPic"
             android:layout_width="20dp"
@@ -28,11 +38,17 @@
     <TextView
         android:id="@+id/evtType"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textSize="11sp"
+        android:textSize="15sp"
         android:textColor="@color/font_grey"
-        android:layout_marginTop="14dp"/>
+        android:layout_marginTop="14dp"
+        android:layout_marginStart="20dp"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:background="@drawable/tag_round_corners"/>
     
     <TextView
         android:id="@+id/evtName"
@@ -41,6 +57,9 @@
         android:text="@string/app_name"
         android:textColor="@color/font_grey"
         android:textSize="20sp"
-        android:layout_marginTop="14dp"/>
+        android:layout_marginTop="14dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"/>
 
+    </LinearLayout>
 </LinearLayout>

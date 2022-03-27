@@ -7,66 +7,58 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.example.easyteamup.EventAdapter;
 import com.example.easyteamup.R;
+import com.example.easyteamup.classes.*;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Events#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.*;
+
 public class Events extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private List<Event> allEvents;
 
     public Events() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Events.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Events newInstance(String param1, String param2) {
-        Events fragment = new Events();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
+        this.allEvents = new ArrayList<>();
 
         getEventList();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_events, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_events, container, false);
+
+        // Add adapter to the home page list view
+        ListView eventsListView = rootView.findViewById(R.id.eventsListView);
+        eventsListView.addHeaderView(new View(getActivity()));
+        eventsListView.addFooterView(new View(getActivity()));
+        getEventList();
+        eventsListView.setAdapter(new EventAdapter(getActivity(), R.layout.item_event, allEvents));
+
+        return rootView;
     }
 
+
+    /**
+     * Get the list of events available from the database
+     * @author Sherry Gao
+     */
     private void getEventList() {
-        // TODO: Retrieve List of Events that is near the user
+        // TODO: Connect with Database
+        for(int i = 0; i < 5; i++) {
+            Event e = new Event(i, "Run On the Beach", 1,0);
+            allEvents.add(e);
+        }
     }
 }

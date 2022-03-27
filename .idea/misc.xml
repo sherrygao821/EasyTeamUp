@@ -4,11 +4,14 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/event_round_corners.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_home.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_notifications.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_user.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/navbar.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/round_corners.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/tag_round_corners.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2409408569335938" />
         <entry key="app/src/main/res/layout/fragment_events.xml" value="0.24544033350703492" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.1" />
