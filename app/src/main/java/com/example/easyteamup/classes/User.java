@@ -1,21 +1,30 @@
-package com.example.easyteamup;
+package com.example.easyteamup.classes;
 
+
+/**
+ * Author: Andy Chen
+ *
+ * Instruction: User user = new User(firstname, lastname, email, age, isStudent, Email, password)
+ *
+ * NOTE: remember to call setUserId() with ID from DB after create new User and store in DB
+ */
 public class User {
+    //Upload photo functionality not delivered
+    private String photo;
     private int userId;
-    private int gender;
     private int age;
     private boolean isStudent;
-    private String userName;
+    private String Email;
     private String userPwd;
     private String firstName;
     private String lastName;
 
-    public User(int userId, int gender, int age, boolean isStudent, String userName, String userPwd, String firstName, String lastName) {
-        this.userId = userId;
-        this.gender = gender;
+    public User (){}
+
+    public User(int age, boolean isStudent, String Email, String userPwd, String firstName, String lastName) {
         this.age = age;
         this.isStudent = isStudent;
-        this.userName = userName;
+        this.Email = Email;
         this.userPwd = userPwd;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -23,12 +32,11 @@ public class User {
 
     @Override
     public String toString() {
-        return "Data{" +
+        return "User{" +
                 "userId=" + userId +
-                ", gender=" + gender +
                 ", age=" + age +
                 ", isStudent=" + isStudent +
-                ", userName='" + userName + '\'' +
+                ", Email='" + Email + '\'' +
                 ", userPwd='" + userPwd + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -43,23 +51,23 @@ public class User {
         this.userId = userId;
     }
 
-    public int getGender() {
-        return gender;
-    }
-
-    public void setGender(int gender) {
-        this.gender = gender;
-    }
-
     public int getAge() {
         return age;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public void setAge(int age) {
         this.age = age;
     }
 
-    public boolean isStudent() {
+    public boolean getStudent() {
         return isStudent;
     }
 
@@ -67,13 +75,16 @@ public class User {
         isStudent = student;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getEmail() {
+        return Email;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setEmail(String Email) {
+        this.Email = Email;
     }
+
+
+
 
     public String getUserPwd() {
         return userPwd;
