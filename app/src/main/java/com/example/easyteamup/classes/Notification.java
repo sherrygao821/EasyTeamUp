@@ -3,12 +3,12 @@ package com.example.easyteamup.classes;
 public class Notification {
 
     private int eventID;
-    private User from;
-    private User to;
+    private int from;
+    private int to;
     //0:joined 1:withdraw 2:update(time terminated) 3:invitation
     private int type;
 
-    public Notification(int eventID, User from, User to, int type) {
+    public Notification(int eventID, int from, int to, int type) {
         this.eventID = eventID;
         this.from = from;
         this.to = to;
@@ -33,19 +33,19 @@ public class Notification {
         this.eventID = eventID;
     }
 
-    public User getFrom() {
+    public int getFrom() {
         return from;
     }
 
-    public void setFrom(User from) {
+    public void setFrom(int from) {
         this.from = from;
     }
 
-    public User getTo() {
+    public int getTo() {
         return to;
     }
 
-    public void setTo(User to) {
+    public void setTo(int to) {
         this.to = to;
     }
 

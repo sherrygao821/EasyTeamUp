@@ -22,7 +22,7 @@ public class User {
     public User (){}
 
     public User(String email, String userPwd) {
-        Email = email;
+        this.Email = email;
         this.userPwd = userPwd;
     }
 

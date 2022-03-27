@@ -12,27 +12,8 @@ import com.example.easyteamup.classes.Event;
 import com.example.easyteamup.classes.Notification;
 import com.example.easyteamup.classes.User;
 
-/**
- * Author: Andy C
- *
- * Instruction:
- *
- * Construct:
- * DatabaseHelper dbhelper = new DatabaseHelper(MainActivity.this);
- *
- * Insert:
- * boolean success = dbhelper.addUser(User u1);
- *  OR
- * boolean sucesss = dbhelper.addEvent(Event e1);
- *  OR
- * boolean sucesss = dbhelper.addNoti(Notification n1);
- *
- * Update:
- *
- *
- *
- *
- */
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -86,7 +67,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    //add user to db one at a time
+    /**
+     * Add user to db
+     * @param user
+     * @return boolean
+     * @author Andy
+     */
     public boolean addUser(User user){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -135,7 +121,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
     }
 
-    //add event to db one at a time
+    /**
+     * Add event to db one at a time
+     * @param event
+     * @return boolean
+     * @author Andy
+     */
     public boolean addEvent (Event event){
         SQLiteDatabase db = this .getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -157,13 +148,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //add notification to table
+
+    /**
+     * Add notification to table
+     * @param noti
+     * @return boolean
+     * @author Andy
+     */
     public boolean addNoti(Notification noti){
         SQLiteDatabase db = this .getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_EVT_ID, noti.getEventID());
-        cv.put(COLUMN_FROM_ID, noti.getFrom().getUserId());
-        cv.put(COLUMN_TO_ID, noti.getTo().getUserId());
+        cv.put(COLUMN_FROM_ID, noti.getFrom());
+        cv.put(COLUMN_TO_ID, noti.getTo());
         cv.put(COLUMN_NOTIFICATION_TYPE, noti.getType());
 
         long insert = db.insert(NOTIFICATION_TABLE,null, cv);
@@ -171,6 +169,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (insert == -1) return false;
         return true;
     }
+
+    /**
+     * get notifications sent to specified user
+     * @param user
+     * @return list of notification
+     * @author Andy
+     */
+    public List<Notification> getNotification(User user){
+
+        List<Notification> notiList = new ArrayList<>();
+        int ID = user.getUserId();
+
+        //get data from notification table
+        String queryString = "SELECT * FROM " + NOTIFICATION_TABLE;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(queryString,null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int tempID = cursor.getInt(3);
+                if (tempID != ID) continue;
+                Notification temp = new Notification(cursor.getInt(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4));
+                notiList.add(temp);
+            } while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return notiList;
+    }
+
+
+    //
 
 
 }
