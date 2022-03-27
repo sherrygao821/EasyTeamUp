@@ -16,7 +16,15 @@ public class Event {
     private boolean isActive;
     private boolean isPublic;
 
-    public Event(int evtId, String evtName, String hostId, String evtDescription, String evtSignUpDueDate, Time evtTime, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic) {
+    // Use this constructor for other parts of coding before connecting to database
+    public Event(int evtId, String evtDescription, int hostId, int evtType) {
+        this.evtId = evtId;
+        this.evtDescription = evtDescription;
+        this.hostId = hostId;
+        this.evtType = evtType;
+    }
+
+    public Event(int evtId, String evtName, int hostId, String evtDescription, String evtSignUpDueDate, Time evtTime, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic) {
         this.evtId = evtId;
         this.evtName = evtName;
         this.hostId = hostId;
