@@ -8,7 +8,7 @@ public class Event {
     private int hostId;
     private String evtDescription;
     private String evtSignUpDueDate;
-    private Time evtTime;
+    private String evtTime;
     private String evtLocation;
     private Map<String, Integer> evtTimeSlots;
     private List<String> evtParticipants;
@@ -27,7 +27,20 @@ public class Event {
         this.evtType = evtType;
     }
 
-    public Event(int evtId, String evtName, int hostId, String evtDescription, String evtSignUpDueDate, Time evtTime, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic) {
+    public Event(String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic) {
+        this.evtName = evtName;
+        this.hostId = hostId;
+        this.evtDescription = evtDescription;
+        this.evtSignUpDueDate = evtSignUpDueDate;
+        this.evtLocation = evtLocation;
+        this.evtTimeSlots = evtTimeSlots;
+        this.evtParticipants = evtParticipants;
+        this.evtType = evtType;
+        this.isActive = isActive;
+        this.isPublic = isPublic;
+    }
+
+    public Event(int evtId, String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtTime, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic) {
         this.evtId = evtId;
         this.evtName = evtName;
         this.hostId = hostId;
@@ -82,11 +95,11 @@ public class Event {
         this.evtSignUpDueDate = evtSignUpDueDate;
     }
 
-    public Time getEvtTime() {
+    public String getEvtTime() {
         return evtTime;
     }
 
-    public void setEvtTime(Time evtTime) {
+    public void setEvtTime(String evtTime) {
         this.evtTime = evtTime;
     }
 

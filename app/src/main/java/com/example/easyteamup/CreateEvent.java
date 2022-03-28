@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,25 +21,31 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.easyteamup.classes.Event;
+import com.example.easyteamup.classes.Time;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CreateEvent extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     Spinner newEvtTypePicker;
     CheckBox newEvtPrivate, newEvtPublic;
-    EditText newEvtName, newEvtInvitations;
-    Button evtDueDatePicker, evtTimeSlotDatePicker, evtTimeSlotTimePickerSubmit;
+    EditText newEvtName, newEvtInvitations, newEvtDescript, evtDurationHours, evtLocation;
+    Button evtSubmit, evtDueDatePicker, evtTimeSlotDatePicker, evtTimeSlotTimePickerSubmit;
     ListView timeslotsLv;
 
     ArrayAdapter<String> timeslotsAdapter;
 
-    private Context context;
-    private Event event;
-    private List<String> timeslotsString;
+    DatabaseHelper db;
 
+    private Context context;
+
+    // new event parameters
     private int evtDueYear;
     private int evtDueMonth;
     private int evtDueDay;
@@ -52,6 +59,15 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
     private int slotHour;
     private int slotMinute;
     String evtTimeSlotString = "";
+    private List<String> timeslotsString;
+
+    private boolean isPublic;
+    private int evtType;
+    private String evtName;
+    private String evtDescript;
+    private int hostId;
+    private String location;
+    private Map<String, Integer> evtTimeSlots;
 
     public CreateEvent() {
     }
@@ -62,9 +78,9 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         setContentView(R.layout.activity_create_event);
 
         // initialization
-        event = new Event();
         context = this;
         timeslotsString = new ArrayList<>();
+        db = new DatabaseHelper(this);
 
         newEvtTypePicker = findViewById(R.id.newEvtTypePicker);
         newEvtPrivate = findViewById(R.id.newEvtPrivate);
@@ -75,6 +91,10 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         timeslotsLv = findViewById(R.id.timeslotsLv);
         evtTimeSlotDatePicker = findViewById(R.id.evtTimeSlotDatePicker);
         evtTimeSlotTimePickerSubmit = findViewById(R.id.evtTimeSlotTimePickerSubmit);
+        evtSubmit = findViewById(R.id.evtSubmit);
+        newEvtDescript = findViewById(R.id.newEvtDescript);
+        evtDurationHours = findViewById(R.id.evtDurationHours);
+        evtLocation = findViewById(R.id.evtLocation);
 
         // event type listview adapter initialization
         ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this, R.array.evtTypes, android.R.layout.simple_spinner_item);
@@ -93,6 +113,49 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         evtDueDatePicker.setOnClickListener(this::handleDueTime);
         evtTimeSlotDatePicker.setOnClickListener(this::handleTimeSlotDate);
         evtTimeSlotTimePickerSubmit.setOnClickListener(this::submitTimeSlotTime);
+        evtSubmit.setOnClickListener(this::submitEvent);
+    }
+
+    /**
+     * submit new event
+     * @param view
+     * @author Sherry Gao
+     */
+    public void submitEvent(View view) {
+
+        // TODO: CHECK EMPTY FIELDS
+        // TODO: ADD DURATION TO EVENT
+
+        // collect all event construction params
+        hostId = ((MyApplication) this.getApplication()).getUser().getUserId();
+        evtDescript = newEvtDescript.getText().toString();
+        location = evtLocation.getText().toString();
+        evtName = newEvtName.getText().toString();
+
+        Map<String, Integer> timeSlotsMap = new HashMap<>();
+        for(String s : timeslotsString) {
+            timeSlotsMap.put(s, 0);
+        }
+
+        String hostEmail = ((MyApplication) this.getApplication()).getUser().getEmail();
+        List<String> participants = new ArrayList<>();
+        participants.add(hostEmail);
+
+        String inviteList = newEvtInvitations.getText().toString();
+        String[] invitees = inviteList.split(";");
+        List<String> inviteesList = new ArrayList<String>(Arrays.asList(invitees));
+
+        // create new event
+        Event event;
+        event = new Event(evtName, hostId, evtDescript, evtDueTimeString, location, timeSlotsMap, participants, evtType, true, isPublic);
+
+        if (db.addEvent(event, inviteesList)) {
+            Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+        else
+            Toast.makeText(this, "Try Again Please!", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -219,7 +282,7 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
      */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        event.setEvtType(i);
+        evtType = i;
     }
 
     @Override
@@ -239,21 +302,21 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         switch(view.getId()) {
             case R.id.newEvtPrivate:
                 if(checked) {
-                    event.setEvtType(0);
+                    isPublic = false;
                     newEvtPublic.setChecked(false);
                 }
                 else {
-                    event.setEvtType(1);
+                    isPublic = true;
                     newEvtPublic.setChecked(true);
                 }
                 break;
             case R.id.newEvtPublic:
                 if(checked) {
-                    event.setEvtType(1);
+                    isPublic = true;
                     newEvtPrivate.setChecked(false);
                 }
                 else {
-                    event.setEvtType(0);
+                    isPublic = false;
                     newEvtPrivate.setChecked(true);
                 }
                 break;

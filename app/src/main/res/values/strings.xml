@@ -39,4 +39,5 @@
     <string name="evtDurationHours">How long is your event in hours?</string>
     <string name="evtDescript">Tell others more about your event!</string>
     <string name="evtSubmit">Submit Event</string>
+    <string name="evtLocation">Where is your event taking place?</string>
 </resources>

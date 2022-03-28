@@ -56,6 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //called when accessed for the first time
     //creating new DB
+    // TODO: ADD COLUMN_PHOTO IN USER TABLE &&& ADD COLUMN_TIME_DURATION IN EVENT TABLE
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createUserTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PWD + " TEXT, " + COLUMN_STUDENT + " INT)";
@@ -130,26 +131,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Add event to db one at a time
      * @param event
+     * @param invitees
      * @return boolean
-     * @author Andy
+     * @author Andy / Sherry Gao
      */
-    public boolean addEvent (Event event){
-        SQLiteDatabase db = this .getWritableDatabase();
-        ContentValues cv = new ContentValues();
+    public boolean addEvent (Event event, List<String> invitees){
 
-        cv.put(COLUMN_EVT_NAME, event.getEvtName());
-        cv.put(COLUMN_EVT_ID, event.getEvtId());
-        cv.put(COLUMN_HOST_ID, event.getHostId());
-        cv.put(COLUMN_TIME, event.getEvtTime().toString());
-        cv.put(COLUMN_LOCATION, event.getEvtLocation());
-        cv.put(COLUMN_EVT_TYPE, event.getEvtType());
-        cv.put(COLUMN_TIMESLOTS, event.getEvtTimeSlots().toString());
-        cv.put(COLUMN_PARTICIPANTS, event.getEvtParticipants().toString());
+        Log.d("DATABASE", new Gson().toJson(event));
+        Log.d("DATABASE", new Gson().toJson(invitees));
 
-        //-1 if failed to insert
-        long insert = db.insert(EVENT_TABLE,null, cv);
+//
+//        SQLiteDatabase db = this .getWritableDatabase();
+//        ContentValues cv = new ContentValues();
+//
+//        String participantsString = new Gson().toJson(event.getEvtParticipants());
+//        String timeSlotsString = new Gson().toJson(event.getEvtTimeSlots());
+//
+//        cv.put(COLUMN_EVT_NAME, event.getEvtName());
+//        // TODO: AUTO INCREMENT for event ID
+          // TODO: SEND NOTI TO INVITEEs
+          // TODO: ADD DURATION TO ROW OF DATA
+//        cv.put(COLUMN_EVT_ID, String.valueOf(event.getEvtId()));
+//        cv.put(COLUMN_HOST_ID, String.valueOf(event.getHostId()));
+//        cv.put(COLUMN_TIME, event.getEvtSignUpDueDate());
+//        cv.put(COLUMN_LOCATION, event.getEvtLocation());
+//        cv.put(COLUMN_EVT_TYPE, String.valueOf(event.getEvtType()));
+//        cv.put(COLUMN_TIMESLOTS, timeSlotsString);
+//        cv.put(COLUMN_PARTICIPANTS, participantsString);
+//
+//        //-1 if failed to insert
+//        long insert = db.insert(EVENT_TABLE,null, cv);
+//
+//        if (insert == -1) return false;
+//        return true;
 
-        if (insert == -1) return false;
         return true;
     }
 
@@ -178,6 +193,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ContentValues cv = new ContentValues();
             cv.put("PARTICIPANTS", participantsString);
             db.update(EVENT_TABLE, cv, "EVT_ID" + "= ?", new String[] {String.valueOf(evtId)});
+
+            // TODO: SEND NOTI TO HOST
 
             return true;
         }

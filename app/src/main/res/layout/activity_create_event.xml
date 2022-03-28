@@ -180,21 +180,26 @@
                 android:text="@string/evtTimeSlotPickerSubmit"/>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/font_grey"
-            android:textSize="20sp"
-            android:text="@string/evtDuration"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"/>
-
         <EditText
             android:id="@+id/evtDurationHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:hint="@string/evtDurationHours"
+            android:textColor="@color/font_grey"
+            android:textSize="20sp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+
+            android:maxLines="1"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/evtLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/evtLocation"
             android:textColor="@color/font_grey"
             android:textSize="20sp"
             android:layout_marginStart="30dp"
