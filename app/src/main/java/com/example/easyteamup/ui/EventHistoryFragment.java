@@ -11,12 +11,9 @@ import android.view.ViewGroup;
 import com.example.easyteamup.EventListAdapter;
 import com.example.easyteamup.EventModel;
 import com.example.easyteamup.R;
-import com.example.easyteamup.ViewPagerAdapter;
-import com.google.android.material.tabs.TabLayout;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 
@@ -45,15 +42,15 @@ public class EventHistoryFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_event_history, container, false);
 
-        recyclerView = view.findViewById(R.id.eventHistoryRV);
-        list = new ArrayList<>();
-        list.add(new EventModel(R.drawable.ic_user, "Beach", "TBD", "sports", "Gaga"));
-        list.add(new EventModel(R.drawable.ic_user, "Beach", "TBD", "sports", "Gaga"));
-
-        EventListAdapter adapter = new EventListAdapter(list, getContext());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+//        recyclerView = view.findViewById(R.id.eventHistoryRV);
+//        list = new ArrayList<>();
+//        list.add(new EventModel(R.drawable.profile, "Beach", "TBD", "sports", "Gaga"));
+//        list.add(new EventModel(R.drawable.profile, "Beach", "TBD", "sports", "Gaga"));
+//
+//        EventListAdapter adapter = new EventListAdapter(list, getContext());
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+//        recyclerView.setLayoutManager(layoutManager);
+//        recyclerView.setAdapter(adapter);
 
         return view;
     }
