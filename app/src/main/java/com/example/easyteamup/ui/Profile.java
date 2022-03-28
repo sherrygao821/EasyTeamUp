@@ -50,7 +50,6 @@ public class Profile extends Fragment {
 
         changeProfileButton = view.findViewById(R.id.change_profile);
         changeProfileButton.setOnClickListener(this::onClick);
-        // TODO: add onClick
         return view;
     }
 
