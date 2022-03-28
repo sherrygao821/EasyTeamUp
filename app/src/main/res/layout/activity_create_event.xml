@@ -1,43 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".CreateEvent"
-    android:layout_gravity="center"
-    android:orientation="vertical">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="50dp"
-        android:text="@string/newEvent"
-        android:textColor="@color/font_grey"
-        android:textSize="30sp"/>
-
-    <EditText
-        android:id="@+id/newEvtName"
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/evtName"
-        android:textColor="@color/font_grey"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:maxLines="1"
-        android:inputType="text" />
+        android:layout_height="match_parent"
+        tools:context=".CreateEvent"
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
-    <Spinner
-        android:id="@+id/newEvtTypePicker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:spinnerMode="dropdown"/>
+        <EditText
+            android:id="@+id/newEvtName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/evtName"
+            android:textColor="@color/font_grey"
+            android:textSize="20sp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:maxLines="1"
+            android:inputType="text" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_grey"
+            android:textSize="20sp"
+            android:text="@string/evtType"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"/>
+        <Spinner
+            android:id="@+id/newEvtTypePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:spinnerMode="dropdown"
+            android:textColor="@color/font_grey"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_grey"
+            android:textSize="20sp"
+            android:text="@string/evtCategory"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"/>
+
+        <CheckBox android:id="@+id/newEvtPrivate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:text="@string/newEvtPrivate"
+            android:textColor="@color/font_grey"
+            android:textSize="15sp"/>
+        <CheckBox android:id="@+id/newEvtPublic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:text="@string/newEvtPublic"
+            android:textColor="@color/font_grey"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_grey"
+            android:textSize="20sp"
+            android:text="@string/evtInvitations"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"/>
+
+        <EditText
+            android:id="@+id/newEvtInvitations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/evtInvitationsHint"
+            android:textColor="@color/font_grey"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:maxLines="1"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_grey"
+            android:textSize="20sp"
+            android:text="@string/evtSignUpDueDate"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/evtDueDatePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:textColor="@color/white"
+                android:background="@drawable/button_round_corners"
+                android:textAllCaps="false"
+                android:text="@string/selectDate"/>
+            <Button
+                android:id="@+id/evtDueTimePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="30dp"
+                android:textColor="@color/white"
+                android:background="@drawable/button_round_corners"
+                android:textAllCaps="false"
+                android:text="@string/selectTime"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
