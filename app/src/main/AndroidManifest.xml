@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.easyteamup">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -10,6 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EasyTeamUp">
+        <activity
+            android:name=".ChangeProfile"
+            android:exported="false"
+            android:label="@string/title_activity_change_profile"
+            android:theme="@style/Theme.EasyTeamUp.NoActionBar" />
         <activity
             android:name=".CreateEvent"
             android:exported="false" />
@@ -30,7 +38,7 @@
         </activity>
         <activity
             android:name=".Login"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>

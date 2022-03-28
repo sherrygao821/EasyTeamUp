@@ -1,5 +1,6 @@
 package com.example.easyteamup.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 
+import com.example.easyteamup.ChangeProfile;
 import com.example.easyteamup.R;
 import com.example.easyteamup.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
@@ -23,8 +24,7 @@ public class Profile extends Fragment {
 
     ViewPager viewPager;
     TabLayout tabLayout;
-    ImageView profileImage;
-    Button changeProfileImage;
+    Button changeProfileButton;
 
     public Profile() {
         // Required empty public constructor
@@ -48,9 +48,20 @@ public class Profile extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        profileImage = view.findViewById(R.id.profile_image);
-        changeProfileImage = view.findViewById(R.id.change_profile_picture);
+        changeProfileButton = view.findViewById(R.id.change_profile);
+        changeProfileButton.setOnClickListener(this::onClick);
         // TODO: add onClick
         return view;
+    }
+
+    /**
+     * Switch to change profile page
+     * @param v
+     * @author Lucy Shi
+     */
+    private void onClick(View v) {
+        Intent intent = new Intent(getActivity(), ChangeProfile.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
     }
 }
