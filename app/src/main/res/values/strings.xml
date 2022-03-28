@@ -31,4 +31,6 @@
     <string name="evtInvitations">Invite Others By Entering Their Emails</string>
     <string name="evtInvitationsHint">Eg. zhaoxuzh@usc.edu;sherryga@usc.edu</string>
     <string name="evtSignUpDueDate">Event Sign Up Due Date</string>
+    <string name="selectDate">Select Date</string>
+    <string name="selectTime">Select Time</string>
 </resources>
