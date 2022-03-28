@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:layout_marginBottom="8dp"
         android:background="@color/green"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -26,7 +26,7 @@
             android:layout_marginStart="41dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="312dp"
-            android:text="Welcome back, "
+            android:text="Welcome back!"
             android:textColor="@color/white"
             android:textSize="30dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -41,13 +41,13 @@
         android:layout_width="86dp"
         android:layout_height="88dp"
         android:layout_marginStart="162dp"
-        android:layout_marginTop="156dp"
+        android:layout_marginTop="108dp"
         android:layout_marginEnd="163dp"
+        android:src="@drawable/profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout2"
-        tools:src="@tools:sample/avatars" />
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout2" />
 
     <TextView
         android:id="@+id/change_profile_picture"
