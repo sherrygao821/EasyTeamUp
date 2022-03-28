@@ -8,6 +8,8 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.easyteamup.R;
 import com.example.easyteamup.ViewPagerAdapter;
@@ -21,6 +23,8 @@ public class Profile extends Fragment {
 
     ViewPager viewPager;
     TabLayout tabLayout;
+    ImageView profileImage;
+    Button changeProfileImage;
 
     public Profile() {
         // Required empty public constructor
@@ -43,6 +47,10 @@ public class Profile extends Fragment {
 
         tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        profileImage = view.findViewById(R.id.profile_image);
+        changeProfileImage = view.findViewById(R.id.change_profile_picture);
+        // TODO: add onClick
         return view;
     }
 }

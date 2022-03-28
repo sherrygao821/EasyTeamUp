@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * My event fragment of the profile page
  * @author Lucy Shi
  */
-public class MyEventFragment extends Fragment {
+public class MyEventFragment extends Events {
 
     RecyclerView recyclerView;
     ArrayList<EventModel> list;
@@ -40,7 +40,7 @@ public class MyEventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_my_event, container, false);
+//        View view = inflater.inflate(R.layout.fragment_my_event, container, false);
 
 //        recyclerView = view.findViewById(R.id.myEventRV);
 //        list = new ArrayList<>();
@@ -52,6 +52,7 @@ public class MyEventFragment extends Fragment {
 //        recyclerView.setLayoutManager(layoutManager);
 //        recyclerView.setAdapter(adapter);
 
-        return view;
+//        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 }

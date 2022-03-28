@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Event history fragment of the profile page
  * @author Lucy Shi
  */
-public class EventHistoryFragment extends Fragment {
+public class EventHistoryFragment extends Events {
 
     RecyclerView recyclerView;
     ArrayList<EventModel> list;
@@ -40,7 +40,7 @@ public class EventHistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_event_history, container, false);
+//        View view = inflater.inflate(R.layout.fragment_event_history, container, false);
 
 //        recyclerView = view.findViewById(R.id.eventHistoryRV);
 //        list = new ArrayList<>();
@@ -52,6 +52,7 @@ public class EventHistoryFragment extends Fragment {
 //        recyclerView.setLayoutManager(layoutManager);
 //        recyclerView.setAdapter(adapter);
 
-        return view;
+//        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 }
