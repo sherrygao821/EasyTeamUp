@@ -18,4 +18,17 @@
     <string name="signupBut">Sign Up</string>
     <string name="newEvent">New Event</string>
     <string name="evtName">Event Name</string>
+    <string-array name="evtTypes">
+        <item>Sports</item>
+        <item>Study</item>
+        <item>Fun</item>
+        <item>Other</item>
+    </string-array>
+    <string name="evtType">Event Type</string>
+    <string name="newEvtPrivate">Private Event</string>
+    <string name="newEvtPublic">Public Event</string>
+    <string name="evtCategory">Event Category</string>
+    <string name="evtInvitations">Invite Others By Entering Their Emails</string>
+    <string name="evtInvitationsHint">Eg. zhaoxuzh@usc.edu;sherryga@usc.edu</string>
+    <string name="evtSignUpDueDate">Event Sign Up Due Date</string>
 </resources>
