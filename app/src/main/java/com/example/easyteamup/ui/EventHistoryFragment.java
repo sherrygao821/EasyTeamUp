@@ -11,12 +11,9 @@ import android.view.ViewGroup;
 import com.example.easyteamup.EventListAdapter;
 import com.example.easyteamup.EventModel;
 import com.example.easyteamup.R;
-import com.example.easyteamup.ViewPagerAdapter;
-import com.google.android.material.tabs.TabLayout;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 
