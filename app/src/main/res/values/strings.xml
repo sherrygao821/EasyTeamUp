@@ -17,7 +17,7 @@
     <string name="selectTimeSlots">Select All Time Slots That Suit You!</string>
     <string name="signupBut">Sign Up</string>
     <string name="newEvent">New Event</string>
-    <string name="evtName">Event Name</string>
+    <string name="evtName">What is your event name?</string>
     <string-array name="evtTypes">
         <item>Sports</item>
         <item>Study</item>
@@ -33,4 +33,10 @@
     <string name="evtSignUpDueDate">Event Sign Up Due Date</string>
     <string name="selectDate">Select Date</string>
     <string name="selectTime">Select Time</string>
+    <string name="evtTimeSlots">Event Start Time</string>
+    <string name="evtDuration">Event Duration</string>
+    <string name="evtTimeSlotPickerSubmit">Submit</string>
+    <string name="evtDurationHours">How long is your event in hours?</string>
+    <string name="evtDescript">Tell others more about your event!</string>
+    <string name="evtSubmit">Submit Event</string>
 </resources>
