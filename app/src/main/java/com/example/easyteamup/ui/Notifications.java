@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import com.example.easyteamup.DatabaseHelper;
 import com.example.easyteamup.EventDetail;
 import com.example.easyteamup.InviteAdapter;
+import com.example.easyteamup.MyApplication;
 import com.example.easyteamup.NotiAdapter;
 import com.example.easyteamup.R;
 import com.example.easyteamup.classes.Notification;
@@ -33,6 +35,7 @@ public class Notifications extends Fragment {
 
     private List<Notification> notiList;
     private List<Notification> invList;
+    private DatabaseHelper db;
 
     public Notifications() {
         // Required empty public constructor
@@ -45,6 +48,7 @@ public class Notifications extends Fragment {
         super.onCreate(savedInstanceState);
         this.notiList = new ArrayList<>();
         this.invList = new ArrayList<>();
+        this.db = new DatabaseHelper(this.getContext());
     }
 
     @Override
@@ -64,8 +68,18 @@ public class Notifications extends Fragment {
             notiList.add(noti.toString());
         }
         */
+
+        //TODO: REMOVE FOR TESTING
         addNotiTest();
         addInvTest();
+        //END TESTING
+
+        /*CORRECT VERSION:
+        notiList = db.getNotification((((MyApplication) this.getActivity().getApplication()).getUser()));
+        invList = db.getInvitations((((MyApplication) this.getActivity().getApplication()).getUser()));
+
+        */
+
         notificationListView.setAdapter(new NotiAdapter(getContext(), R.layout.item_notification, notiList));
         ListView invListView = rootView.findViewById(R.id.invlistview);
         invListView.setAdapter(new InviteAdapter(getContext(),R.layout.item_noti_inv,invList));

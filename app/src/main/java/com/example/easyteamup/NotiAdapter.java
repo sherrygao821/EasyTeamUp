@@ -46,6 +46,9 @@ public class NotiAdapter extends ArrayAdapter<Notification> {
         db.addNoti(new Notification(0,1,2,3));
         db.addTempEvent(new Event(0,"new event",0,0));
 
+        //TESTING ENDS
+
+
         Notification n = getItem(position);
 
 

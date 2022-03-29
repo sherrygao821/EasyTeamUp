@@ -24,6 +24,8 @@ public class User {
     public User(String email, String userPwd) {
         this.Email = email;
         this.userPwd = userPwd;
+        this.firstName = "firstName";
+        this.lastName = "lastName";
     }
 
     public User(int age, boolean isStudent, String Email, String userPwd, String firstName, String lastName) {

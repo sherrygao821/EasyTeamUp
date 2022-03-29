@@ -25,17 +25,7 @@ public class Notification {
         } else if (this.type == 3) {
             return "Time Terminated for your event " + eventID;
         }
-        return "type is invitation";
-
-        /*
-        return "Notification{" +
-                "eventID=" + eventID +
-                ", from=" + from +
-                ", to=" + to +
-                ", type=" + type +
-                '}';
-
-         */
+        return "Invited You to Join Event";
     }
 
     public int getEventID() {

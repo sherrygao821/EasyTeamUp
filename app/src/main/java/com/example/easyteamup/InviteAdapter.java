@@ -47,6 +47,16 @@ public class InviteAdapter extends ArrayAdapter<Notification> {
 
         db.addTempEvent(new Event(0,"new event",0,0));
 
+
+        //TESTING ENDs
+
+
+
+        /*
+
+
+         */
+
         Notification n = getItem(position);
 
 
@@ -83,9 +93,11 @@ public class InviteAdapter extends ArrayAdapter<Notification> {
                 db.addNoti(new Notification(n.getEventID(),n.getTo(),n.getFrom(),1));
 
                 //TODO: ADD To PARTICIPANTS & SIGNUP
-                //db.signUpEvent(n.getEventID(), )
+                /*
                 String userEmail = db.getUserEmail(n.getTo());
                 db.signUpEvent(n.getEventID(),userEmail,new HashMap<String,Integer>());
+
+                 */
                 //remove this notification
                 db.deleteNoti(n.getNotiID());
             }
