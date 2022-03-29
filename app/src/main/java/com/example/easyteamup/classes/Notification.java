@@ -17,12 +17,24 @@ public class Notification {
 
     @Override
     public String toString() {
+        if (this.type == 0){
+            return this.from + " joined your event " + eventID;
+        } else if (this.type == 1) {
+            return this.from + " withdraw from your event " + eventID;
+        } else if (this.type == 3) {
+            return "Time Terminated for your event " + eventID;
+        }
+        return "type is invitation";
+
+        /*
         return "Notification{" +
                 "eventID=" + eventID +
                 ", from=" + from +
                 ", to=" + to +
                 ", type=" + type +
                 '}';
+
+         */
     }
 
     public int getEventID() {
