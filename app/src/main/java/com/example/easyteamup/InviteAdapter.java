@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.example.easyteamup.classes.Event;
 import com.example.easyteamup.classes.Notification;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class InviteAdapter extends ArrayAdapter<Notification> {
@@ -83,7 +84,8 @@ public class InviteAdapter extends ArrayAdapter<Notification> {
 
                 //TODO: ADD To PARTICIPANTS & SIGNUP
                 //db.signUpEvent(n.getEventID(), )
-
+                String userEmail = db.getUserEmail(n.getTo());
+                db.signUpEvent(n.getEventID(),userEmail,new HashMap<String,Integer>());
                 //remove this notification
                 db.deleteNoti(n.getNotiID());
             }
