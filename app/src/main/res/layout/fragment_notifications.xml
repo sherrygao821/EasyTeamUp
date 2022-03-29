@@ -9,8 +9,30 @@
 
     <TextView
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Notifications"
+        android:textSize="30sp"
+        android:textColor="@color/font_grey"
+        android:layout_marginTop="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="This is Notifications Page" />
+        android:layout_marginTop="80sp"
+        android:layout_marginBottom="10sp"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id = "@+id/notilistview"
+            />
+
+
+    </LinearLayout>
+
 
 </FrameLayout>

@@ -45,7 +45,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EVT_TYPE = "TYPE";
     public static final String COLUMN_TIMESLOTS = "TIMESLOTS";
     public static final String COLUMN_PARTICIPANTS = "PARTICIPANTS";
-    // TODO
     public static final String COLUMN_EVT_DURATION = "DURATION";
     public static final String COLUMN_EVT_PUBLIC = "IS_PUBLIC";
     public static final String COLUMN_EVT_DESCRIPTION = "EVT_DESCRIPTION";
@@ -69,9 +68,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createUserTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PWD + " TEXT, " + COLUMN_STUDENT + " INT)";
-        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, " + COLUMN_EVT_DURATION + " TEXT, " + COLUMN_EVT_TYPE + " INT)";
+        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, " + COLUMN_EVT_DURATION + " TEXT, " + COLUMN_EVT_TYPE + " INT, " + COLUMN_EVT_DESCRIPTION + " TEXT, " + COLUMN_EVT_PUBLIC + " BOOLEAN)";
         String createNotiTableStatement = "CREATE TABLE " + NOTIFICATION_TABLE + " (" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_ID + " INT, " + COLUMN_FROM_ID + " INT, " + COLUMN_TO_ID + " INT, " + COLUMN_NOTIFICATION_TYPE + " INT)";
-
         db.execSQL(createEventTableStatement);
         db.execSQL(createUserTableStatement);
         db.execSQL(createNotiTableStatement);
@@ -79,7 +77,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //call when updated/version changes
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
     }
 
     /**
@@ -156,14 +153,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String timeSlotsString = new Gson().toJson(event.getEvtTimeSlots());
 
         cv.put(COLUMN_EVT_NAME, event.getEvtName());
-        // TODO: SEND NOTI TO INVITEEs
+        // TODO: SEND NOTI TO INVITEES
         cv.put(COLUMN_HOST_ID, String.valueOf(event.getHostId()));
         cv.put(COLUMN_TIME, event.getEvtSignUpDueDate());
         cv.put(COLUMN_LOCATION, event.getEvtLocation());
         cv.put(COLUMN_EVT_TYPE, String.valueOf(event.getEvtType()));
         cv.put(COLUMN_TIMESLOTS, timeSlotsString);
         cv.put(COLUMN_PARTICIPANTS, participantsString);
-        // cv.put(COLUMN_EVT_DURATION, event.getEvtDuration());
+        cv.put(COLUMN_EVT_DURATION, event.getEvtDuration());
+        cv.put(COLUMN_EVT_PUBLIC, event.isPublic());
+        cv.put(COLUMN_EVT_DESCRIPTION, event.getEvtDescription());
 
         //-1 if failed to insert
         long insert = db.insert(EVENT_TABLE,null, cv);
@@ -173,13 +172,72 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * get name of a user with userid
+     * @param userId
+     * @return
+     * @author Andy Chen
+     */
+
+    public String getUserNameById(int userId){
+        //Log.d("database", "hii");
+        //Log.d("database",String.valueOf(userId));
+        //Log.d("database", "hii2");
+        String ans = "cursor is null";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM USER_TABLE WHERE ID = ?", new String[]{String.valueOf(userId)});
+        if (cursor != null) {
+            cursor.moveToFirst();
+            ans = cursor.getString(1);
+        }
+        cursor.close();
+        db.close();
+        return ans;
+    }
+
+    public boolean addTempEvent (Event event) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_EVT_NAME, event.getEvtName());
+        cv.put(COLUMN_EVT_ID, event.getEvtId());
+        cv.put(COLUMN_HOST_ID, event.getHostId());
+        cv.put(COLUMN_EVT_TYPE, event.getEvtType());
+
+        //-1 if failed to insert
+        long insert = db.insert(EVENT_TABLE, null, cv);
+
+        if (insert == -1) return false;
+        return true;
+    }
+
+    /**
+     * get name of an event with event
+     * @param eventId
+     * @return
+     * @author Andy Chen
+     */
+
+    public String getEvtNamebyID(int eventId){
+        String ans = "cursor is null";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_NAME = ?", new String[]{String.valueOf(eventId)});
+        if (cursor != null) {
+            cursor.moveToFirst();
+            //ans = cursor.getString(1);
+            ans = "New Event";
+        }
+        cursor.close();
+        db.close();
+        return ans;
+    }
+
+    /**
      * get all active && public events for the home page
      * @return
      */
     public List<Event> getAllActivePublicEvents() {
-
-        List<Event> allEvents = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
+        List<Event> allEvents = new ArrayList<>();
 
         Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE",null);
 
@@ -195,32 +253,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                 // Check whether the event is active or not
                 String time = cursor.getString(cursor.getColumnIndexOrThrow("TIME"));
-                Calendar calendar = new GregorianCalendar();
-                calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH) + 1;
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                int hour = calendar.get(Calendar.HOUR);
-                int minute = calendar.get(Calendar.MINUTE);
-
-                String[] dueTime = time.split("-");
-                int[] dueTimeNum = new int[3];
-                for(int i = 0; i < 3; i++) {
-                    dueTimeNum[i] = Integer.parseInt(dueTime[i]);
-                }
-
-                if(dueTimeNum[0] < year || (dueTimeNum[0] == year && dueTimeNum[1] < month) || (dueTimeNum[0] == year && dueTimeNum[1] == month && dueTimeNum[2] < day)) {
-                    String[] dueHours = dueTime[3].split(":");
-                    int[] dueHoursNum = new int[2];
-                    for(int i = 0; i < 2; i++) {
-                        dueHoursNum[i] = Integer.parseInt(dueHours[i]);
-                    }
-
-                    if(dueHoursNum[0] < hour || (dueHoursNum[0] == hour && dueHoursNum[1] <= minute)) {
-                        cursor.moveToNext();
-                        continue;
-                    }
-                }
+//                Calendar calendar = new GregorianCalendar();
+//                calendar.getInstance();
+//                int year = calendar.get(Calendar.YEAR);
+//                int month = calendar.get(Calendar.MONTH) + 1;
+//                int day = calendar.get(Calendar.DAY_OF_MONTH);
+//                int hour = calendar.get(Calendar.HOUR);
+//                int minute = calendar.get(Calendar.MINUTE);
+//
+//                String[] dueTime = time.split("-");
+//                int[] dueTimeNum = new int[3];
+//                for(int i = 0; i < 3; i++) {
+//                    dueTimeNum[i] = Integer.parseInt(dueTime[i]);
+//                }
+//
+//                if(dueTimeNum[0] < year || (dueTimeNum[0] == year && dueTimeNum[1] < month) || (dueTimeNum[0] == year && dueTimeNum[1] == month && dueTimeNum[2] < day)) {
+//                    String[] dueHours = dueTime[3].split(":");
+//                    int[] dueHoursNum = new int[2];
+//                    for(int i = 0; i < 2; i++) {
+//                        dueHoursNum[i] = Integer.parseInt(dueHours[i]);
+//                    }
+//
+//                    if(dueHoursNum[0] < hour || (dueHoursNum[0] == hour && dueHoursNum[1] <= minute)) {
+//                        cursor.moveToNext();
+//                        continue;
+//                    }
+//                }
 
                 int evtId = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow("EVT_ID")));
                 String evtName = cursor.getString(cursor.getColumnIndexOrThrow("EVT_NAME"));
