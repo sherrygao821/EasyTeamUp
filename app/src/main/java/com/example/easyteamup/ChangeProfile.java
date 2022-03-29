@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +14,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,22 +40,31 @@ import android.widget.Toast;
 public class ChangeProfile extends AppCompatActivity {
 
     EditText etFirstName, etLastName, etEmail, etContactNo;
-    final int MIN_PASSWORD_LENGTH = 6;
+    ImageView avatar1, avatar2, avatar3, avatar4;
+    Button changeProfile;
+    private int avatarIdx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_profile);
 
-        viewInitializations();
-    }
+        changeProfile = findViewById(R.id.change_profile);
 
-    void viewInitializations() {
         etFirstName = findViewById(R.id.et_first_name);
         etLastName = findViewById(R.id.et_last_name);
         etEmail = findViewById(R.id.et_email);
         etContactNo = findViewById(R.id.et_contact_no);
 
+        avatar1 = findViewById(R.id.imageView);
+        avatar2 = findViewById(R.id.imageView2);
+        avatar3 = findViewById(R.id.imageView3);
+        avatar4 = findViewById(R.id.imageView4);
+
+        avatar1.setOnClickListener(this::onImageClicked);
+        avatar2.setOnClickListener(this::onImageClicked);
+        avatar3.setOnClickListener(this::onImageClicked);
+        avatar4.setOnClickListener(this::onImageClicked);
     }
 
 //     Checking if the input in form is valid
@@ -101,8 +113,43 @@ public class ChangeProfile extends AppCompatActivity {
 
             Toast.makeText(this,"Profile Update Successfully",Toast.LENGTH_SHORT).show();
             // call API now
+            ((MyApplication) this.getApplication()).getUser().setFirstName(firstName);
+            ((MyApplication) this.getApplication()).getUser().setLastName(lastName);
+            ((MyApplication) this.getApplication()).getUser().setEmail(email);
 
+            changeProfile.setOnClickListener(this::closeOnClick);
         }
+    }
+
+    public void onImageClicked(View view){
+
+
+        switch(view.getId()) {
+            case R.id.imageView:
+                avatarIdx = 1;
+                break;
+            case R.id.imageView2:
+                avatarIdx = 2;
+                break;
+            case R.id.imageView3:
+                avatarIdx = 3;
+                break;
+            case R.id.imageView4:
+                avatarIdx = 4;
+                break;
+        }
+//
+        Toast.makeText(this,"Avatar Update Successfully",Toast.LENGTH_SHORT).show();
+        ((MyApplication) this.getApplication()).getUser().setPhoto(avatarIdx);
+    }
+
+    public void closeOnClick(View v) {
+        switchActivity("Home");
+    }
+
+    private void switchActivity(String page) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
 }

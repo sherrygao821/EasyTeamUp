@@ -3,6 +3,7 @@ package com.example.easyteamup.ui;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -10,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.easyteamup.ChangeProfile;
+import com.example.easyteamup.MyApplication;
 import com.example.easyteamup.R;
 import com.example.easyteamup.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
@@ -25,6 +28,9 @@ public class Profile extends Fragment {
     ViewPager viewPager;
     TabLayout tabLayout;
     Button changeProfileButton;
+    ImageView avatar;
+
+    private int photoIdx;
 
     public Profile() {
         // Required empty public constructor
@@ -50,6 +56,25 @@ public class Profile extends Fragment {
 
         changeProfileButton = view.findViewById(R.id.change_profile);
         changeProfileButton.setOnClickListener(this::onClick);
+
+        // change profile photo
+        avatar = view.findViewById(R.id.profile_image);
+        photoIdx = ((MyApplication)getActivity().getApplication()).getUser().getPhoto();
+        switch(photoIdx) {
+            case 1:
+                avatar.setImageResource(R.drawable.avatars1);
+                break;
+            case 2:
+                avatar.setImageResource(R.drawable.avatars2);
+                break;
+            case 3:
+                avatar.setImageResource(R.drawable.avatars3);
+                break;
+            case 4:
+                avatar.setImageResource(R.drawable.avatars4);
+                break;
+        }
+
         return view;
     }
 

@@ -10,7 +10,7 @@ package com.example.easyteamup.classes;
  */
 public class User {
     //Upload photo functionality not delivered
-    private String photo;
+    private int photo;
     private int userId;
     private int age;
     private boolean isStudent;
@@ -60,11 +60,11 @@ public class User {
         return age;
     }
 
-    public String getPhoto() {
+    public int getPhoto() {
         return photo;
     }
 
-    public void setPhoto(String photo) {
+    public void setPhoto(int photo) {
         this.photo = photo;
     }
 
@@ -115,6 +115,3 @@ public class User {
         this.lastName = lastName;
     }
 }
-
-
-
