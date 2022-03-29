@@ -469,9 +469,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 participantsList.remove(userEmail);
             }
         }
+    public void deleteNoti(int notiId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM "+NOTIFICATION_TABLE+" WHERE NOTI_ID = "+String.valueOf(notiId));
     }
 
-    //
+    //get notification
+    //public int getNotiId()
 
 
 }

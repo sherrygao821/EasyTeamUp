@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.example.easyteamup.DatabaseHelper;
 import com.example.easyteamup.EventDetail;
+import com.example.easyteamup.InviteAdapter;
 import com.example.easyteamup.NotiAdapter;
 import com.example.easyteamup.R;
 import com.example.easyteamup.classes.Notification;
@@ -25,12 +26,13 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Notifications#newInstance} factory method to
+ * Use the factory method to
  * create an instance of this fragment.
  */
 public class Notifications extends Fragment {
 
     private List<Notification> notiList;
+    private List<Notification> invList;
 
     public Notifications() {
         // Required empty public constructor
@@ -42,6 +44,7 @@ public class Notifications extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.notiList = new ArrayList<>();
+        this.invList = new ArrayList<>();
     }
 
     @Override
@@ -62,8 +65,10 @@ public class Notifications extends Fragment {
         }
         */
         addNotiTest();
+        addInvTest();
         notificationListView.setAdapter(new NotiAdapter(getContext(), R.layout.item_notification, notiList));
-
+        ListView invListView = rootView.findViewById(R.id.invlistview);
+        invListView.setAdapter(new InviteAdapter(getContext(),R.layout.item_noti_inv,invList));
 
         return rootView;
     }
@@ -73,4 +78,10 @@ public class Notifications extends Fragment {
         this.notiList.add(new Notification(0,1,2,1));
         this.notiList.add(new Notification(0,1,2,3));
     }
+
+    private void addInvTest(){
+        this.invList.add(new Notification(0,1,2,2));
+    }
+
+
 }

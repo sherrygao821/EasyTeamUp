@@ -53,10 +53,15 @@
     <string name="delete">Delete</string>
     <string name="fetch">Fetch</string>
     <string name="todo">TODO</string>
+
+    <!-- Strings used for notification page -->
+
     <string name="update_profile_information">Update Profile Information</string>
     <string name="withdrawDescription">Withdraw From Your Event</string>
     <string name="timeTerminated">Time Terminated</string>
     <string name="notijoinevent">Joined Your Event</string>
     <string name="foryourevent">For Your Event</string>
     <string name="determineTime">Determine Event Time</string>
+    <string name="invitetoevent">Invited You to Join Event</string>
+
 </resources>
