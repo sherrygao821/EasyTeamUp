@@ -67,7 +67,6 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
     private String evtDescript;
     private int hostId;
     private String location;
-    private Map<String, Integer> evtTimeSlots;
 
     public CreateEvent() {
     }
@@ -124,13 +123,13 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
     public void submitEvent(View view) {
 
         // TODO: CHECK EMPTY FIELDS
-        // TODO: ADD DURATION TO EVENT
 
         // collect all event construction params
         hostId = ((MyApplication) this.getApplication()).getUser().getUserId();
         evtDescript = newEvtDescript.getText().toString();
         location = evtLocation.getText().toString();
         evtName = newEvtName.getText().toString();
+        String evtDuration = evtDurationHours.getText().toString();
 
         Map<String, Integer> timeSlotsMap = new HashMap<>();
         for(String s : timeslotsString) {
@@ -147,7 +146,7 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
 
         // create new event
         Event event;
-        event = new Event(evtName, hostId, evtDescript, evtDueTimeString, location, timeSlotsMap, participants, evtType, true, isPublic);
+        event = new Event(evtName, hostId, evtDescript, evtDueTimeString, location, timeSlotsMap, participants, evtType, true, isPublic, evtDuration);
 
         if (db.addEvent(event, inviteesList)) {
             Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
@@ -164,6 +163,10 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
      * @author Sherry Gao
      */
     public void submitTimeSlotTime(View view) {
+        if(evtTimeSlotString.equals("")) {
+            Toast.makeText(this, "Select A Time First!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if(timeslotsString.contains(evtTimeSlotString)) {
             Toast.makeText(this, "You Already Added This Start Time", Toast.LENGTH_SHORT).show();
             return;
@@ -216,7 +219,7 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
                             slotHour = i;
                             slotMinute = i1;
-                            evtTimeSlotString = String.valueOf(slotYear) + "-" + String.valueOf(slotMonth) + "-" + String.valueOf(slotDay) + " " + String.valueOf(slotHour) + ":" + String.valueOf(slotMinute);
+                            evtTimeSlotString = String.valueOf(slotYear) + "-" + String.valueOf(slotMonth) + "-" + String.valueOf(slotDay) + "-" + String.valueOf(slotHour) + ":" + String.valueOf(slotMinute);
                             evtTimeSlotDatePicker.setText(evtTimeSlotString);
                         }
                     }, hour, minute, true);

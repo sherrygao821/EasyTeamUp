@@ -15,6 +15,7 @@ public class Event {
     private int evtType;
     private boolean isActive;
     private boolean isPublic;
+    private String evtDuration;
 
     public Event() {
     }
@@ -27,7 +28,8 @@ public class Event {
         this.evtType = evtType;
     }
 
-    public Event(String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic) {
+    public Event(String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic, String evtDuration) {
+        this.evtDuration = evtDuration;
         this.evtName = evtName;
         this.hostId = hostId;
         this.evtDescription = evtDescription;
@@ -40,7 +42,7 @@ public class Event {
         this.isPublic = isPublic;
     }
 
-    public Event(int evtId, String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtTime, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic) {
+    public Event(int evtId, String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtTime, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic, String evtDuration) {
         this.evtId = evtId;
         this.evtName = evtName;
         this.hostId = hostId;
@@ -53,6 +55,15 @@ public class Event {
         this.evtType = evtType;
         this.isActive = isActive;
         this.isPublic = isPublic;
+        this.evtDuration =evtDuration;
+    }
+
+    public String getEvtDuration() {
+        return evtDuration;
+    }
+
+    public void setEvtDuration(String evtDuration) {
+        this.evtDuration = evtDuration;
     }
 
     public int getEvtId() {

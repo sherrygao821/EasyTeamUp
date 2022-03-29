@@ -29,6 +29,7 @@
             android:id="@+id/newEvtDescript"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:hint="@string/evtDescript"
             android:textColor="@color/font_grey"
             android:textSize="20sp"

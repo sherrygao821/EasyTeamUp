@@ -17,7 +17,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -41,6 +45,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EVT_TYPE = "TYPE";
     public static final String COLUMN_TIMESLOTS = "TIMESLOTS";
     public static final String COLUMN_PARTICIPANTS = "PARTICIPANTS";
+    // TODO
+    public static final String COLUMN_EVT_DURATION = "DURATION";
+    public static final String COLUMN_EVT_PUBLIC = "IS_PUBLIC";
+    public static final String COLUMN_EVT_DESCRIPTION = "EVT_DESCRIPTION";
+
+
 
     //Notification Table constants;
     public static final String NOTIFICATION_TABLE = "NOTIFICATION_TABLE";
@@ -56,15 +66,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //called when accessed for the first time
     //creating new DB
-    // TODO: ADD COLUMN_PHOTO IN USER TABLE &&& ADD COLUMN_TIME_DURATION IN EVENT TABLE
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createUserTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PWD + " TEXT, " + COLUMN_STUDENT + " INT)";
-        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, "  + COLUMN_EVT_TYPE + " INT)";
+        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, " + COLUMN_EVT_DURATION + " TEXT, " + COLUMN_EVT_TYPE + " INT)";
         String createNotiTableStatement = "CREATE TABLE " + NOTIFICATION_TABLE + " (" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_ID + " INT, " + COLUMN_FROM_ID + " INT, " + COLUMN_TO_ID + " INT, " + COLUMN_NOTIFICATION_TYPE + " INT)";
 
-        db.execSQL(createUserTableStatement);
         db.execSQL(createEventTableStatement);
+        db.execSQL(createUserTableStatement);
         db.execSQL(createNotiTableStatement);
     }
     //call when updated/version changes
@@ -140,32 +149,104 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d("DATABASE", new Gson().toJson(event));
         Log.d("DATABASE", new Gson().toJson(invitees));
 
-//
-//        SQLiteDatabase db = this .getWritableDatabase();
-//        ContentValues cv = new ContentValues();
-//
-//        String participantsString = new Gson().toJson(event.getEvtParticipants());
-//        String timeSlotsString = new Gson().toJson(event.getEvtTimeSlots());
-//
-//        cv.put(COLUMN_EVT_NAME, event.getEvtName());
-//        // TODO: AUTO INCREMENT for event ID
-          // TODO: SEND NOTI TO INVITEEs
-          // TODO: ADD DURATION TO ROW OF DATA
-//        cv.put(COLUMN_EVT_ID, String.valueOf(event.getEvtId()));
-//        cv.put(COLUMN_HOST_ID, String.valueOf(event.getHostId()));
-//        cv.put(COLUMN_TIME, event.getEvtSignUpDueDate());
-//        cv.put(COLUMN_LOCATION, event.getEvtLocation());
-//        cv.put(COLUMN_EVT_TYPE, String.valueOf(event.getEvtType()));
-//        cv.put(COLUMN_TIMESLOTS, timeSlotsString);
-//        cv.put(COLUMN_PARTICIPANTS, participantsString);
-//
-//        //-1 if failed to insert
-//        long insert = db.insert(EVENT_TABLE,null, cv);
-//
-//        if (insert == -1) return false;
-//        return true;
+        SQLiteDatabase db = this .getWritableDatabase();
+        ContentValues cv = new ContentValues();
 
+        String participantsString = new Gson().toJson(event.getEvtParticipants());
+        String timeSlotsString = new Gson().toJson(event.getEvtTimeSlots());
+
+        cv.put(COLUMN_EVT_NAME, event.getEvtName());
+        // TODO: SEND NOTI TO INVITEEs
+        cv.put(COLUMN_HOST_ID, String.valueOf(event.getHostId()));
+        cv.put(COLUMN_TIME, event.getEvtSignUpDueDate());
+        cv.put(COLUMN_LOCATION, event.getEvtLocation());
+        cv.put(COLUMN_EVT_TYPE, String.valueOf(event.getEvtType()));
+        cv.put(COLUMN_TIMESLOTS, timeSlotsString);
+        cv.put(COLUMN_PARTICIPANTS, participantsString);
+        // cv.put(COLUMN_EVT_DURATION, event.getEvtDuration());
+
+        //-1 if failed to insert
+        long insert = db.insert(EVENT_TABLE,null, cv);
+
+        if (insert == -1) return false;
         return true;
+    }
+
+    /**
+     * get all active && public events for the home page
+     * @return
+     */
+    public List<Event> getAllActivePublicEvents() {
+
+        List<Event> allEvents = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE",null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+
+                // check whether or not to add the evnt to the list
+                boolean isPublic = true;
+                if(!isPublic) {
+                    cursor.moveToNext();
+                    continue;
+                }
+
+                // Check whether the event is active or not
+                String time = cursor.getString(cursor.getColumnIndexOrThrow("TIME"));
+                Calendar calendar = new GregorianCalendar();
+                calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH) + 1;
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int hour = calendar.get(Calendar.HOUR);
+                int minute = calendar.get(Calendar.MINUTE);
+
+                String[] dueTime = time.split("-");
+                int[] dueTimeNum = new int[3];
+                for(int i = 0; i < 3; i++) {
+                    dueTimeNum[i] = Integer.parseInt(dueTime[i]);
+                }
+
+                if(dueTimeNum[0] < year || (dueTimeNum[0] == year && dueTimeNum[1] < month) || (dueTimeNum[0] == year && dueTimeNum[1] == month && dueTimeNum[2] < day)) {
+                    String[] dueHours = dueTime[3].split(":");
+                    int[] dueHoursNum = new int[2];
+                    for(int i = 0; i < 2; i++) {
+                        dueHoursNum[i] = Integer.parseInt(dueHours[i]);
+                    }
+
+                    if(dueHoursNum[0] < hour || (dueHoursNum[0] == hour && dueHoursNum[1] <= minute)) {
+                        cursor.moveToNext();
+                        continue;
+                    }
+                }
+
+                int evtId = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow("EVT_ID")));
+                String evtName = cursor.getString(cursor.getColumnIndexOrThrow("EVT_NAME"));
+                int hostId = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow("HOST_ID")));
+                String location = cursor.getString(cursor.getColumnIndexOrThrow("LOCATION"));
+                int type = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow("TYPE")));
+
+                Map<String, Integer> timeslots = new HashMap<>();
+                Type classType = new TypeToken<Map<String, Integer>>() {}.getType();
+                timeslots = new Gson().fromJson(cursor.getString(cursor.getColumnIndexOrThrow("TIMESLOTS")), classType);
+
+                List<String> participants = new ArrayList<>();
+                classType = new TypeToken<List<String>>() {}.getType();
+                participants = new Gson().fromJson(cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS")), classType);
+
+                // String duration = cursor.getString(cursor.getColumnIndexOrThrow("DURATION"));
+                String duration = "12";
+                String evtDescription = "Event Description";
+
+                Event event = new Event(evtId, evtName, hostId, evtDescription, time, null, location, timeslots, participants, type, true, isPublic, duration);
+                allEvents.add(event);
+                cursor.moveToNext();
+            }
+        }
+
+        return allEvents;
     }
 
     /**

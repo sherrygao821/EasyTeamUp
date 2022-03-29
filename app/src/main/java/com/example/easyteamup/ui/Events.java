@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.easyteamup.CreateEvent;
+import com.example.easyteamup.DatabaseHelper;
 import com.example.easyteamup.EventAdapter;
 import com.example.easyteamup.EventDetail;
 import com.example.easyteamup.R;
@@ -26,6 +28,8 @@ public class Events extends Fragment {
 
     ListView eventsListView;
     ImageView addEventButton;
+
+    DatabaseHelper db;
 
     private List<Event> allEvents;
 
@@ -52,7 +56,7 @@ public class Events extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_events, container, false);
-
+        db = new DatabaseHelper(getActivity());
         // Add adapter to the home page list view
         eventsListView = rootView.findViewById(R.id.eventsListView);
         eventsListView.addHeaderView(new View(getActivity()));
@@ -97,10 +101,9 @@ public class Events extends Fragment {
      * @author Sherry Gao
      */
     private void getEventList() {
-        // TODO: Connect with Database
-        for(int i = 0; i < 5; i++) {
-            Event e = new Event(i, "Run On the Beach " + String.valueOf(i), 0, "I really want to run on the beach, but I could not find someone who also wants to run on the beach.", "11:59PM 3/31", null, "Santa Monica Beach", new HashMap<String, Integer>(), new ArrayList<String>(), 0, true, true);
-            allEvents.add(e);
-        }
+        allEvents = db.getAllActivePublicEvents();
+
+        if(allEvents.size() == 0)
+            Toast.makeText(getActivity(), "No Available Events! Please Check Back Later or Create One!", Toast.LENGTH_SHORT).show();
     }
 }
