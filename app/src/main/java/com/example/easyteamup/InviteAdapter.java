@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,14 +17,14 @@ import com.example.easyteamup.classes.Notification;
 
 import java.util.List;
 
-public class NotiAdapter extends ArrayAdapter<Notification> {
+public class InviteAdapter extends ArrayAdapter<Notification> {
 
     private Context context;
     private int resourceLayout;
     private DatabaseHelper db;
 
-    public NotiAdapter(@NonNull Context context, int resource, List<Notification> noti) {
-        super(context, resource, noti);
+    public InviteAdapter(@NonNull Context context, int resource, List<Notification> inv) {
+        super(context, resource, inv);
         this.resourceLayout = resource;
         this.context = context;
         this.db = new DatabaseHelper(this.context);
@@ -41,9 +42,8 @@ public class NotiAdapter extends ArrayAdapter<Notification> {
         }
 
         //TODO: REMOVE TESTING
-        db.addNoti(new Notification(0,1,2,0));
-        db.addNoti(new Notification(0,1,2,1));
-        db.addNoti(new Notification(0,1,2,3));
+        db.addNoti(new Notification(0,1,2,2));
+
         db.addTempEvent(new Event(0,"new event",0,0));
 
         Notification n = getItem(position);
@@ -54,23 +54,18 @@ public class NotiAdapter extends ArrayAdapter<Notification> {
             TextView description = (TextView) v.findViewById(R.id.notiDescription);
             TextView notiEvtName = (TextView) v.findViewById(R.id.notiEventName);
 
-            if (n.getType() != 2){
+
+            if (n.getType() == 2){
+
                 if (fromUser != null){
-                    if (n.getType() == 3){
-                         fromUser.setText(R.string.timeTerminated);
-                    } else {
-                        Log.d("noti", String.valueOf(n.getFrom()));
-                         fromUser.setText(db.getUserNameById(n.getFrom()));
-                    }
+                    fromUser.setText(db.getUserNameById(n.getFrom()));
                 }
 
-                if(description != null){
-                    if (n.getType() == 0) description.setText(R.string.withdrawDescription);
-                    else if (n.getType() == 1) description.setText(R.string.notijoinevent);
-                    else if (n.getType() == 3) description.setText(R.string.foryourevent);
+                if (description != null) {
+                    description.setText(R.string.invitetoevent);
                 }
 
-                if(notiEvtName != null){
+                if (notiEvtName != null) {
                     notiEvtName.setText(db.getEvtNamebyID(n.getEventID()));
                 }
 
@@ -78,7 +73,28 @@ public class NotiAdapter extends ArrayAdapter<Notification> {
 
         }
 
+        ImageButton buttonAccept = (ImageButton) v.findViewById(R.id.acceptInvButton);
+        ImageButton buttonDecline = (ImageButton) v.findViewById(R.id.declineInvButton);
 
+        buttonAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.addNoti(new Notification(n.getEventID(),n.getTo(),n.getFrom(),1));
+
+                //TODO: ADD To PARTICIPANTS & SIGNUP
+                //db.signUpEvent(n.getEventID(), )
+
+                //remove this notification
+                db.deleteNoti(n.getNotiID());
+            }
+        });
+
+        buttonDecline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.deleteNoti(n.getNotiID());
+            }
+        });
 
         return v;
     }

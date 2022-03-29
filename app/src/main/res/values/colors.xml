@@ -10,4 +10,6 @@
     <color name="background_grey">#F6F6F6</color>
     <color name="tag_blue">#B0ECFF</color>
     <color name="add_button_green">#90D9A0</color>
+    <color name="red">#B61111</color>
+    <color name="add_button_better_green">#3CBF59</color>
 </resources>

@@ -7,6 +7,7 @@ public class Notification {
     private int to;
     //0:joined 1:withdraw 2:update(time terminated) 3:invitation
     private int type;
+    private int notiID;
 
     public Notification(int eventID, int from, int to, int type) {
         this.eventID = eventID;
@@ -67,5 +68,13 @@ public class Notification {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getNotiID() {
+        return notiID;
+    }
+
+    public void setNotiID(int notiID) {
+        this.notiID = notiID;
     }
 }

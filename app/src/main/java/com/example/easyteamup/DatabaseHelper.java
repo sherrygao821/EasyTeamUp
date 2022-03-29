@@ -398,8 +398,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return notiList;
     }
 
+    public void deleteNoti(int notiId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM "+NOTIFICATION_TABLE+" WHERE NOTI_ID = "+String.valueOf(notiId));
+    }
 
-    //
+    //get notification
+    //public int getNotiId()
 
 
 }
