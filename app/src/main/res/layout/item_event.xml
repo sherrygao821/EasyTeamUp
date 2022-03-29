@@ -19,7 +19,8 @@
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp">
-        <ImageView
+
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/evtUserPic"
             android:layout_width="20dp"
             android:layout_height="20dp"
