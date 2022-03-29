@@ -45,7 +45,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EVT_TYPE = "TYPE";
     public static final String COLUMN_TIMESLOTS = "TIMESLOTS";
     public static final String COLUMN_PARTICIPANTS = "PARTICIPANTS";
-    // TODO
     public static final String COLUMN_EVT_DURATION = "DURATION";
     public static final String COLUMN_EVT_PUBLIC = "IS_PUBLIC";
     public static final String COLUMN_EVT_DESCRIPTION = "EVT_DESCRIPTION";
@@ -69,9 +68,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createUserTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PWD + " TEXT, " + COLUMN_STUDENT + " INT)";
-        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, " + COLUMN_EVT_DURATION + " TEXT, " + COLUMN_EVT_TYPE + " INT)";
+        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, " + COLUMN_EVT_DURATION + " TEXT, " + COLUMN_EVT_TYPE + " INT, " + COLUMN_EVT_DESCRIPTION + " TEXT, " + COLUMN_EVT_PUBLIC + " BOOLEAN)";
         String createNotiTableStatement = "CREATE TABLE " + NOTIFICATION_TABLE + " (" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_ID + " INT, " + COLUMN_FROM_ID + " INT, " + COLUMN_TO_ID + " INT, " + COLUMN_NOTIFICATION_TYPE + " INT)";
-
         db.execSQL(createEventTableStatement);
         db.execSQL(createUserTableStatement);
         db.execSQL(createNotiTableStatement);
@@ -79,7 +77,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //call when updated/version changes
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
     }
 
     /**
@@ -156,14 +153,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String timeSlotsString = new Gson().toJson(event.getEvtTimeSlots());
 
         cv.put(COLUMN_EVT_NAME, event.getEvtName());
-        // TODO: SEND NOTI TO INVITEEs
+        // TODO: SEND NOTI TO INVITEES
         cv.put(COLUMN_HOST_ID, String.valueOf(event.getHostId()));
         cv.put(COLUMN_TIME, event.getEvtSignUpDueDate());
         cv.put(COLUMN_LOCATION, event.getEvtLocation());
         cv.put(COLUMN_EVT_TYPE, String.valueOf(event.getEvtType()));
         cv.put(COLUMN_TIMESLOTS, timeSlotsString);
         cv.put(COLUMN_PARTICIPANTS, participantsString);
-        // cv.put(COLUMN_EVT_DURATION, event.getEvtDuration());
+        cv.put(COLUMN_EVT_DURATION, event.getEvtDuration());
+        cv.put(COLUMN_EVT_PUBLIC, event.isPublic());
+        cv.put(COLUMN_EVT_DESCRIPTION, event.getEvtDescription());
 
         //-1 if failed to insert
         long insert = db.insert(EVENT_TABLE,null, cv);
@@ -177,9 +176,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return
      */
     public List<Event> getAllActivePublicEvents() {
-
-        List<Event> allEvents = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
+        List<Event> allEvents = new ArrayList<>();
 
         Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE",null);
 
