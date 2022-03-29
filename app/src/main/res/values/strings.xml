@@ -53,4 +53,8 @@
     <string name="delete">Delete</string>
     <string name="fetch">Fetch</string>
     <string name="todo">TODO</string>
+    <string name="withdrawDescription">Withdraw From Your Event</string>
+    <string name="timeTerminated">Time Terminated</string>
+    <string name="notijoinevent">Joined Your Event</string>
+    <string name="foryourevent">For Your Event</string>
 </resources>
