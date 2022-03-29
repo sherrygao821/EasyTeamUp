@@ -58,4 +58,5 @@
     <string name="timeTerminated">Time Terminated</string>
     <string name="notijoinevent">Joined Your Event</string>
     <string name="foryourevent">For Your Event</string>
+    <string name="determineTime">Determine Event Time</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.easyteamup;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,10 +27,14 @@ public class EventDetail extends AppCompatActivity {
 
     TextView evtDetailUserName, evtDeadline, evtDetailType, evtDetailDescript, evtDetailLoc, evtDetailNoP, evtDetailEmail;
     ImageView evtDetailUserPic;
-    Button signUpButton;
+    Button signUpButton, withdrawButton, determineTimeButton;
     ListView showTimeSlots;
 
+    DatabaseHelper db;
+
     ArrayAdapter<String> timeslotsAdapter;
+
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,7 @@ public class EventDetail extends AppCompatActivity {
             event = new Gson().fromJson(eventInfo, Event.class);
         }
 
+        userEmail = (((MyApplication) this.getApplication()).getUser().getEmail());
         evtDetailUserName = findViewById(R.id.evtDetailUserName);
         evtDeadline = findViewById(R.id.evtDeadline);
         evtDetailType = findViewById(R.id.evtDetailType);
@@ -53,6 +59,10 @@ public class EventDetail extends AppCompatActivity {
         evtDetailUserPic = findViewById(R.id.evtDetailUserPic);
         signUpButton = findViewById(R.id.signUpButton);
         showTimeSlots = findViewById(R.id.showTimeSlots);
+        withdrawButton = findViewById(R.id.withdrawButton);
+        determineTimeButton = findViewById(R.id.determineTimeButton);
+
+        db = new DatabaseHelper(this);
 
         // initialize time slots list for adapter
         List<String> timeslots = new ArrayList<>();
@@ -69,13 +79,31 @@ public class EventDetail extends AppCompatActivity {
 
         List<String> participants = event.getEvtParticipants();
         String userEmail = (((MyApplication) this.getApplication()).getUser().getEmail());
-        if(participants.contains(userEmail)) {
-            signUpButton.setClickable(false);
-            signUpButton.setText("You Already Signed Up");
+        if(((MyApplication) this.getApplication()).getUser().getUserId() == event.getHostId()) {
+            determineTimeButton.setOnClickListener(this::determineTime);
+            withdrawButton.setVisibility(View.INVISIBLE);
+            signUpButton.setVisibility(View.INVISIBLE);
+        }
+        else if(participants.contains(userEmail)) {
+            signUpButton.setVisibility(View.INVISIBLE);
+            withdrawButton.setOnClickListener(this::withdrawEvent);
+            determineTimeButton.setVisibility(View.INVISIBLE);
         }
         else {
             signUpButton.setOnClickListener(this::onClick);
+            withdrawButton.setVisibility(View.INVISIBLE);
+            determineTimeButton.setVisibility(View.INVISIBLE);
         }
+
+    }
+
+    public void determineTime(View v) {
+        String time = db.determineTimeSlots(event.getEvtId());
+        determineTimeButton.setText(time);
+    }
+
+    public void withdrawEvent(View v) {
+        // db.withdrawEvent(event.getEvtId(), userEmail);
     }
 
     /**
