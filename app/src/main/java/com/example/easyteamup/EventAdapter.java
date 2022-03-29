@@ -40,20 +40,16 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
         if (e != null) {
             TextView evtUserName = (TextView) v.findViewById(R.id.evtUserName);
-            ImageView evtUserPic = (ImageView) v.findViewById(R.id.evtUserPic);
             TextView evtType = (TextView) v.findViewById(R.id.evtType);
             TextView evtName = (TextView) v.findViewById(R.id.evtName);
 
             if (evtUserName != null) {
-                evtUserName.setText(String.valueOf(e.getHostId()));
+                evtUserName.setText(String.valueOf(e.getHostEmail()));
             }
 
-//            if (evtUserPic != null) {
-//                evtUserPic.setImageResource(e.get);
-//            }
-
             if (evtType != null) {
-                evtType.setText(String.valueOf(e.getEvtType()));
+                String[] resources = context.getResources().getStringArray(R.array.evtTypes);
+                evtType.setText(String.valueOf(resources[e.getEvtType()]));
             }
 
             if(evtName != null) {

@@ -194,6 +194,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return ans;
     }
 
+    /**
+     * get user email by id
+     * @param userId
+     * @return
+     * @author Sherry Gao
+     */
+    public String getUserEmail(int userId){
+        String ans = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM USER_TABLE WHERE ID = ?", new String[]{String.valueOf(userId)});
+        if (cursor.moveToFirst()) {
+            ans = cursor.getString(cursor.getColumnIndexOrThrow("EMAIL"));
+        }
+        cursor.close();
+        db.close();
+        return ans;
+    }
+
     public boolean addTempEvent (Event event) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -314,7 +332,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return boolean
      * @author Sherry Gao
      */
-    public boolean signUpEvent(int evtId, String userEmail) {
+    public boolean signUpEvent(int evtId, String userEmail, Map<String, Integer> map) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_ID = ?", new String[] {String.valueOf(evtId)});
@@ -323,14 +341,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String participantsString = cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS"));
             Type type = new TypeToken<List<String>>() {}.getType();
             List<String> participantsList = new Gson().fromJson(participantsString, type);
-            Log.d("DB", participantsString);
 
             participantsList.add(userEmail);
             participantsString = new Gson().toJson(participantsList);
-            Log.d("DB", participantsString);
+
+            String timeslotsString = new Gson().toJson(map);
 
             ContentValues cv = new ContentValues();
-            cv.put("PARTICIPANTS", participantsString);
+            cv.put(COLUMN_PARTICIPANTS, participantsString);
+            cv.put(COLUMN_TIMESLOTS, timeslotsString);
+            Log.d("DATABASE", timeslotsString);
             db.update(EVENT_TABLE, cv, "EVT_ID" + "= ?", new String[] {String.valueOf(evtId)});
 
             // TODO: SEND NOTI TO HOST

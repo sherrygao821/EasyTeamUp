@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -30,6 +31,8 @@ public class Events extends Fragment {
     ImageView addEventButton;
 
     DatabaseHelper db;
+
+    ArrayAdapter<String> timeslotsAdapter;
 
     private List<Event> allEvents;
 
@@ -57,6 +60,7 @@ public class Events extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_events, container, false);
         db = new DatabaseHelper(getActivity());
+
         // Add adapter to the home page list view
         eventsListView = rootView.findViewById(R.id.eventsListView);
         eventsListView.addHeaderView(new View(getActivity()));
@@ -105,5 +109,11 @@ public class Events extends Fragment {
 
         if(allEvents.size() == 0)
             Toast.makeText(getActivity(), "No Available Events! Please Check Back Later or Create One!", Toast.LENGTH_SHORT).show();
+
+        for(Event e : allEvents) {
+            int userId = e.getHostId();
+            String hostEmail = db.getUserEmail(userId);
+            e.setHostEmail(hostEmail);
+        }
     }
 }

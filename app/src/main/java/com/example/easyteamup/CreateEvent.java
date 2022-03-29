@@ -121,9 +121,6 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
      * @author Sherry Gao
      */
     public void submitEvent(View view) {
-
-        // TODO: CHECK EMPTY FIELDS
-
         // collect all event construction params
         hostId = ((MyApplication) this.getApplication()).getUser().getUserId();
         evtDescript = newEvtDescript.getText().toString();
