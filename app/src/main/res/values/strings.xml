@@ -53,4 +53,5 @@
     <string name="delete">Delete</string>
     <string name="fetch">Fetch</string>
     <string name="todo">TODO</string>
+    <string name="update_profile_information">Update Profile Information</string>
 </resources>
