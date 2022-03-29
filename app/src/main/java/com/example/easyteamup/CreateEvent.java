@@ -140,9 +140,15 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         List<String> participants = new ArrayList<>();
         participants.add(hostEmail);
 
+        List<String> inviteesList;
         String inviteList = newEvtInvitations.getText().toString();
-        String[] invitees = inviteList.split(";");
-        List<String> inviteesList = new ArrayList<String>(Arrays.asList(invitees));
+        if(inviteList.equals("")) {
+            inviteesList = new ArrayList<String>();
+        }
+        else {
+            String[] invitees = inviteList.split(";");
+            inviteesList = new ArrayList<String>(Arrays.asList(invitees));
+        }
 
         // create new event
         Event event;
@@ -264,7 +270,7 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
                             evtDueHour = i;
                             evtDueMinute = i1;
-                            evtDueTimeString = String.valueOf(evtDueYear) + "-" + String.valueOf(evtDueMonth) + "-" + String.valueOf(evtDueDay) + " " + String.valueOf(evtDueHour) + ":" + String.valueOf(evtDueMinute);
+                            evtDueTimeString = String.valueOf(evtDueYear) + "-" + String.valueOf(evtDueMonth) + "-" + String.valueOf(evtDueDay) + "-" + String.valueOf(evtDueHour) + ":" + String.valueOf(evtDueMinute);
                             evtDueDatePicker.setText(evtDueTimeString);
                         }
                     }, hour, minute, true);
