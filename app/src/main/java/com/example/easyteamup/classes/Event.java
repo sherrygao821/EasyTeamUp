@@ -5,6 +5,7 @@ import java.util.*;
 public class Event {
     private int evtId;
     private String evtName;
+    private String hostEmail;
     private int hostId;
     private String evtDescription;
     private String evtSignUpDueDate;
@@ -56,6 +57,14 @@ public class Event {
         this.isActive = isActive;
         this.isPublic = isPublic;
         this.evtDuration =evtDuration;
+    }
+
+    public String getHostEmail() {
+        return hostEmail;
+    }
+
+    public void setHostEmail(String hostEmail) {
+        this.hostEmail = hostEmail;
     }
 
     public String getEvtDuration() {

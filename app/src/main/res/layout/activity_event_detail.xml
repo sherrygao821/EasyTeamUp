@@ -23,7 +23,7 @@
                 android:id="@+id/evtDetailUserPic"
                 android:layout_width="62dp"
                 android:layout_height="62dp"
-                android:src="@drawable/ic_user"/>
+                android:src="@drawable/ic_baseline_person_black"/>
             <TextView
                 android:id="@+id/evtDetailUserName"
                 android:layout_width="wrap_content"
@@ -95,7 +95,12 @@
                 android:textColor="@color/font_grey"
                 android:textSize="15sp"
                 android:text="@string/timeslot"/>
-            <!--        <ListView></ListView>-->
+            <ListView
+                android:id="@+id/showTimeSlots"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="14dp"/>
         </LinearLayout>
 
         <LinearLayout

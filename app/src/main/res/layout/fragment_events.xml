@@ -18,9 +18,8 @@
         android:layout_width="67dp"
         android:layout_height="67dp"
         android:layout_marginStart="300dp"
-        android:layout_marginTop="450dp"
+        android:layout_marginTop="500dp"
         android:background="@drawable/add_button_round_corners"
         android:src="@drawable/ic_baseline_add"
         android:clickable="true"/>
-
 </FrameLayout>
