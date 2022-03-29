@@ -7,32 +7,59 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Notifications"
-        android:textSize="30sp"
-        android:textColor="@color/font_grey"
-        android:layout_marginTop="20dp"/>
-
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="80sp"
-        android:layout_marginBottom="10sp"
         android:orientation="vertical"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+        >
 
-        <ListView
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Notifications"
+            android:textSize="30sp"
+            android:textColor="@color/font_grey"
+            android:layout_marginTop="20dp"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id = "@+id/notilistview"
-            />
 
+            android:layout_marginBottom="10sp"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_height="300dp"
+                android:id = "@+id/notilistview"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Invitations"
+                android:textSize="30sp"
+                android:textColor="@color/font_grey"
+                android:layout_marginTop="20dp"/>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content"
+                android:id = "@+id/invlistview"
+                />
+
+
+        </LinearLayout>
 
     </LinearLayout>
+
+
 
 
 </FrameLayout>

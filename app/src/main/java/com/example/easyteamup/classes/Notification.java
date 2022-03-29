@@ -7,6 +7,7 @@ public class Notification {
     private int to;
     //0:joined 1:withdraw 2:update(time terminated) 3:invitation
     private int type;
+    private int notiID;
 
     public Notification(int eventID, int from, int to, int type) {
         this.eventID = eventID;
@@ -24,17 +25,7 @@ public class Notification {
         } else if (this.type == 3) {
             return "Time Terminated for your event " + eventID;
         }
-        return "type is invitation";
-
-        /*
-        return "Notification{" +
-                "eventID=" + eventID +
-                ", from=" + from +
-                ", to=" + to +
-                ", type=" + type +
-                '}';
-
-         */
+        return "Invited You to Join Event";
     }
 
     public int getEventID() {
@@ -67,5 +58,13 @@ public class Notification {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getNotiID() {
+        return notiID;
+    }
+
+    public void setNotiID(int notiID) {
+        this.notiID = notiID;
     }
 }

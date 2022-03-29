@@ -187,7 +187,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM USER_TABLE WHERE ID = ?", new String[]{String.valueOf(userId)});
         if (cursor != null) {
             cursor.moveToFirst();
-            ans = cursor.getString(1);
+            //TODO: TESTING change user name needs to be implemented
+            //CORRECT VERSION: ans = cursor.getString(1);
+            ans = "Zhaoxu";
         }
         cursor.close();
         db.close();
@@ -241,6 +243,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_NAME = ?", new String[]{String.valueOf(eventId)});
         if (cursor != null) {
             cursor.moveToFirst();
+            //TODO: TESTING
             //ans = cursor.getString(1);
             ans = "New Event";
         }
@@ -252,6 +255,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * get all active && public events for the home page
      * @return
+     * @author Sherry Gao
      */
     public List<Event> getAllActivePublicEvents() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -416,8 +420,101 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return notiList;
     }
 
+    /**
+     * get notifications sent to specified user
+     * @param user
+     * @return list of notification
+     * @author Andy
+     */
+    public List<Notification> getInvitations(User user) {
 
-    //
+        List<Notification> inviList = new ArrayList<>();
+        int ID = user.getUserId();
+
+        //get data from notification table
+        String queryString = "SELECT * FROM " + NOTIFICATION_TABLE;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int tempID = cursor.getInt(3);
+                int tempNotiId = cursor.getInt(4);
+                if (tempID != ID) continue;
+                if (tempNotiId != 2) continue;
+                Notification temp = new Notification(cursor.getInt(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4));
+                inviList.add(temp);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return inviList;
+    }
+/**
+     * determine best time slot for event
+     * @param evtId
+     * @return
+     * @author Sherry Gao
+     */
+    public String determineTimeSlots(int evtId) {
+        SQLiteDatabase db = this .getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_ID = ?", new String[] {String.valueOf(evtId)});
+
+        if(cursor.moveToFirst()) {
+            String timeslotsString = cursor.getString(cursor.getColumnIndexOrThrow("TIMESLOTS"));
+            Type classType = new TypeToken<Map<String, Integer>>() {}.getType();
+            Map<String, Integer> timeslots = new Gson().fromJson(timeslotsString, classType);
+
+            Map.Entry<String, Integer> maxEntry = null;
+
+            for (Map.Entry<String, Integer> entry : timeslots.entrySet())
+            {
+                if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
+                {
+                    maxEntry = entry;
+                }
+            }
+
+            String maxTimeSlot = maxEntry.getKey();
+
+            return maxTimeSlot;
+        }
+
+        return "";
+    }
+
+    /**
+     * Withdraw from event
+     * @param evtId
+     * @param userEmail
+     * @author Sherry Gao
+     */
+    public void withdrawEvent(int evtId, String userEmail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_ID = ?", new String[]{String.valueOf(evtId)});
+
+        if (cursor.moveToFirst()) {
+            String participants = cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS"));
+            Type classType = new TypeToken<Map<String, Integer>>() {
+            }.getType();
+            List<String> participantsList = new Gson().fromJson(participants, classType);
+
+            if (participantsList.contains(userEmail)) {
+                participantsList.remove(userEmail);
+            }
+        }
+    }
+
+    public void deleteNoti(int notiId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM "+NOTIFICATION_TABLE+" WHERE NOTI_ID = "+String.valueOf(notiId));
+    }
+
+    //get notification
+    //public int getNotiId()
 
 
 }
