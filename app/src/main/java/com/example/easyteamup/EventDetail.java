@@ -34,7 +34,7 @@ public class EventDetail extends AppCompatActivity {
 
     ArrayAdapter<String> timeslotsAdapter;
 
-    private String userEmail;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class EventDetail extends AppCompatActivity {
      * @param v
      */
     public void withdrawEvent(View v) {
-        if(db.withdrawEvent(event.getEvtId(), userEmail)) {
+        if(db.withdrawEvent(event.getEvtId(), userId)) {
             Toast.makeText(this, "Successfully Withdraw From The Event!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -157,7 +157,7 @@ public class EventDetail extends AppCompatActivity {
      * @author Sherry Gao
      */
     private void setPageInfo() {
-        userEmail = (((MyApplication) this.getApplication()).getUser().getEmail());
+        userId = (((MyApplication) this.getApplication()).getUser().getUserId());
         evtDetailUserName = findViewById(R.id.evtDetailUserName);
         evtDeadline = findViewById(R.id.evtDeadline);
         evtDetailType = findViewById(R.id.evtDetailType);

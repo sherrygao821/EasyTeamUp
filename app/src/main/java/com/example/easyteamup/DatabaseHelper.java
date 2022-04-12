@@ -114,6 +114,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean checkUser(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
+//        db.execSQL("DROP TABLE IF EXISTS " + EVENT_TABLE);
+//        db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_TABLE);
+//        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, " + COLUMN_EVT_DURATION + " TEXT, " + COLUMN_EVT_TYPE + " INT, " + COLUMN_EVT_DESCRIPTION + " TEXT, " + COLUMN_EVT_PUBLIC + " BOOLEAN, " + COLUMN_EVT_DETERMINED_TIME + " TEXT )";
+//        String createNotiTableStatement = "CREATE TABLE " + NOTIFICATION_TABLE + " (" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_ID + " INT, " + COLUMN_FROM_ID + " INT, " + COLUMN_TO_ID + " INT, " + COLUMN_NOTIFICATION_TYPE + " INT)";
+//        db.execSQL(createEventTableStatement);
+//        db.execSQL(createNotiTableStatement);
 //        Cursor cursor = db.rawQuery("SELECT ID, PHOTO FROM USER_TABLE WHERE EMAIL = ?", new String[] {username});
         Cursor cursor = db.rawQuery("SELECT ID FROM USER_TABLE WHERE EMAIL = ?", new String[] {username});
         if(cursor.getCount() > 0)
@@ -381,7 +387,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cv.put(COLUMN_TIMESLOTS, timeslotsString);
             db.update(EVENT_TABLE, cv, "EVT_ID" + "= ?", new String[] {String.valueOf(evtId)});
 
-            // TODO: SEND NOTI TO HOST
+            // send notification to event host
+            int evtHostId = cursor.getInt(cursor.getColumnIndexOrThrow("HOST_ID"));
+            Notification invite = new Notification(evtId, userId, evtHostId, 0);
+            addNoti(invite);
 
             return true;
         }
@@ -509,6 +518,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cv.put(COLUMN_EVT_DETERMINED_TIME, maxTimeSlot);
             db.update(EVENT_TABLE, cv, "EVT_ID" + "= ?", new String[] {String.valueOf(evtId)});
 
+            String participantsString = cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS"));
+            int evtHostId = cursor.getInt(cursor.getColumnIndexOrThrow("HOST_ID"));
+            List<Integer> participants = new Gson().fromJson(participantsString, classType);
+
+            for(Integer i : participants) {
+                Notification invite = new Notification(evtId, evtHostId, i, 2);
+                addNoti(invite);
+            }
+
             return maxTimeSlot;
         }
 
@@ -538,28 +556,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Withdraw from event
      * @param evtId
-     * @param userEmail
+     * @param userId
      * @return boolean
      * @author Sherry Gao
      */
-    public boolean withdrawEvent(int evtId, String userEmail) {
+    public boolean withdrawEvent(int evtId, int userId) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_ID = ?", new String[]{String.valueOf(evtId)});
 
         if (cursor.moveToFirst()) {
             String participants = cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS"));
-            Type classType = new TypeToken<List<String>>() {
+            Type classType = new TypeToken<List<Integer>>() {
             }.getType();
-            List<String> participantsList = new Gson().fromJson(participants, classType);
+            List<Integer> participantsList = new Gson().fromJson(participants, classType);
 
-            if (participantsList.contains(userEmail)) {
-                participantsList.remove(userEmail);
+            if (participantsList.contains(userId)) {
+                participantsList.remove(Integer.valueOf(userId));
                 String newParticipantsList = new Gson().toJson(participantsList);
                 ContentValues cv = new ContentValues();
 
                 cv.put(COLUMN_PARTICIPANTS, newParticipantsList);
                 db.update(EVENT_TABLE, cv, "EVT_ID" + "= ?", new String[] {String.valueOf(evtId)});
+
+                int evtHostId = cursor.getInt(cursor.getColumnIndexOrThrow("HOST_ID"));
+                Notification invite = new Notification(evtId, userId, evtHostId, 1);
+                addNoti(invite);
             }
             return true;
         }
