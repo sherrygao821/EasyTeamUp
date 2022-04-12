@@ -518,22 +518,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Withdraw from event
      * @param evtId
      * @param userEmail
+     * @return boolean
      * @author Sherry Gao
      */
-    public void withdrawEvent(int evtId, String userEmail) {
+    public boolean withdrawEvent(int evtId, String userEmail) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_ID = ?", new String[]{String.valueOf(evtId)});
 
+
         if (cursor.moveToFirst()) {
             String participants = cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS"));
-            Type classType = new TypeToken<Map<String, Integer>>() {
+            Type classType = new TypeToken<List<String>>() {
             }.getType();
             List<String> participantsList = new Gson().fromJson(participants, classType);
 
             if (participantsList.contains(userEmail)) {
                 participantsList.remove(userEmail);
+                String newParticipantsList = new Gson().toJson(participantsList);
+                ContentValues cv = new ContentValues();
+
+                cv.put(COLUMN_PARTICIPANTS, newParticipantsList);
+                db.update(EVENT_TABLE, cv, "EVT_ID" + "= ?", new String[] {String.valueOf(evtId)});
             }
+            return true;
         }
+        else
+            return false;
     }
 
     public void deleteNoti(int notiId){

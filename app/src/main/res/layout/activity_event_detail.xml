@@ -210,8 +210,8 @@
             android:text="@string/withdrawDescription"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:background="@drawable/button_round_corners"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false"
+            android:background="@drawable/button_red_round_corners"/>
 
         <Button
             android:id="@+id/determineTimeButton"
@@ -224,8 +224,8 @@
             android:text="@string/determineTime"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:background="@drawable/button_round_corners"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false"
+            android:background="@drawable/button_unselected_round_corners"/>
 
     </LinearLayout>
 </ScrollView>

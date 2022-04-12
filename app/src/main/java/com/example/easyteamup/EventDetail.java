@@ -48,19 +48,7 @@ public class EventDetail extends AppCompatActivity {
             event = new Gson().fromJson(eventInfo, Event.class);
         }
 
-        userEmail = (((MyApplication) this.getApplication()).getUser().getEmail());
-        evtDetailUserName = findViewById(R.id.evtDetailUserName);
-        evtDeadline = findViewById(R.id.evtDeadline);
-        evtDetailType = findViewById(R.id.evtDetailType);
-        evtDetailDescript = findViewById(R.id.evtDetailDescript);
-        evtDetailLoc = findViewById(R.id.evtDetailLoc);
-        evtDetailNoP = findViewById(R.id.evtDetailNoP);
-        evtDetailEmail = findViewById(R.id.evtDetailEmail);
-        evtDetailUserPic = findViewById(R.id.evtDetailUserPic);
-        signUpButton = findViewById(R.id.signUpButton);
-        showTimeSlots = findViewById(R.id.showTimeSlots);
-        withdrawButton = findViewById(R.id.withdrawButton);
-        determineTimeButton = findViewById(R.id.determineTimeButton);
+        setPageInfo();
 
         db = new DatabaseHelper(this);
 
@@ -79,13 +67,29 @@ public class EventDetail extends AppCompatActivity {
         checkEventOptions();
     }
 
+    /**
+     * determine the best time for this event if host
+     * @param v
+     */
     public void determineTime(View v) {
         String time = db.determineTimeSlots(event.getEvtId());
         determineTimeButton.setText("Event Time is " + time);
     }
 
+    /**
+     * withdraw with this event if signed up
+     * @param v
+     */
     public void withdrawEvent(View v) {
-        // db.withdrawEvent(event.getEvtId(), userEmail);
+        if(db.withdrawEvent(event.getEvtId(), userEmail)) {
+            Toast.makeText(this, "Successfully Withdraw From The Event!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+        }
+        else {
+            Toast.makeText(this, "Try Again Please!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -146,5 +150,25 @@ public class EventDetail extends AppCompatActivity {
             determineTimeButton.setText("Event Time is " + evtDeterminedTimeSlot);
             determineTimeButton.setClickable(false);
         }
+    }
+
+    /**
+     * link page ui elements to java file
+     * @author Sherry Gao
+     */
+    private void setPageInfo() {
+        userEmail = (((MyApplication) this.getApplication()).getUser().getEmail());
+        evtDetailUserName = findViewById(R.id.evtDetailUserName);
+        evtDeadline = findViewById(R.id.evtDeadline);
+        evtDetailType = findViewById(R.id.evtDetailType);
+        evtDetailDescript = findViewById(R.id.evtDetailDescript);
+        evtDetailLoc = findViewById(R.id.evtDetailLoc);
+        evtDetailNoP = findViewById(R.id.evtDetailNoP);
+        evtDetailEmail = findViewById(R.id.evtDetailEmail);
+        evtDetailUserPic = findViewById(R.id.evtDetailUserPic);
+        signUpButton = findViewById(R.id.signUpButton);
+        showTimeSlots = findViewById(R.id.showTimeSlots);
+        withdrawButton = findViewById(R.id.withdrawButton);
+        determineTimeButton = findViewById(R.id.determineTimeButton);
     }
 }
