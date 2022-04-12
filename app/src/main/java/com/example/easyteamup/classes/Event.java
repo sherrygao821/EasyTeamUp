@@ -17,8 +17,17 @@ public class Event {
     private boolean isActive;
     private boolean isPublic;
     private String evtDuration;
+    private String evtDeterminedTime;
 
     public Event() {
+    }
+
+    public String getEvtDeterminedTime() {
+        return evtDeterminedTime;
+    }
+
+    public void setEvtDeterminedTime(String evtDeterminedTime) {
+        this.evtDeterminedTime = evtDeterminedTime;
     }
 
     // Use this constructor for other parts of coding before connecting to database
@@ -27,6 +36,7 @@ public class Event {
         this.evtName = evtName;
         this.hostId = hostId;
         this.evtType = evtType;
+        this.evtDeterminedTime = "";
     }
 
     public Event(String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic, String evtDuration) {
@@ -41,6 +51,7 @@ public class Event {
         this.evtType = evtType;
         this.isActive = isActive;
         this.isPublic = isPublic;
+        this.evtDeterminedTime = "";
     }
 
     public Event(int evtId, String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtTime, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic, String evtDuration) {
@@ -56,7 +67,8 @@ public class Event {
         this.evtType = evtType;
         this.isActive = isActive;
         this.isPublic = isPublic;
-        this.evtDuration =evtDuration;
+        this.evtDuration = evtDuration;
+        this.evtDeterminedTime = "";
     }
 
     public String getHostEmail() {

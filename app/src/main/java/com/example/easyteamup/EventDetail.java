@@ -76,30 +76,12 @@ public class EventDetail extends AppCompatActivity {
         showTimeSlots.setEnabled(false);
 
         setEventInfo();
-
-        List<String> participants = event.getEvtParticipants();
-        String userEmail = (((MyApplication) this.getApplication()).getUser().getEmail());
-        if(((MyApplication) this.getApplication()).getUser().getUserId() == event.getHostId()) {
-            determineTimeButton.setOnClickListener(this::determineTime);
-            withdrawButton.setVisibility(View.INVISIBLE);
-            signUpButton.setVisibility(View.INVISIBLE);
-        }
-        else if(participants.contains(userEmail)) {
-            signUpButton.setVisibility(View.INVISIBLE);
-            withdrawButton.setOnClickListener(this::withdrawEvent);
-            determineTimeButton.setVisibility(View.INVISIBLE);
-        }
-        else {
-            signUpButton.setOnClickListener(this::onClick);
-            withdrawButton.setVisibility(View.INVISIBLE);
-            determineTimeButton.setVisibility(View.INVISIBLE);
-        }
-
+        checkEventOptions();
     }
 
     public void determineTime(View v) {
         String time = db.determineTimeSlots(event.getEvtId());
-        determineTimeButton.setText(time);
+        determineTimeButton.setText("Event Time is " + time);
     }
 
     public void withdrawEvent(View v) {
@@ -134,5 +116,35 @@ public class EventDetail extends AppCompatActivity {
         evtDetailLoc.setText(event.getEvtLocation());
         evtDetailNoP.setText(String.valueOf(event.getEvtParticipants().size()));
         evtDetailEmail.setText(String.valueOf(event.getHostEmail()));
+    }
+
+    /**
+     * check whether the user is the host of the event/sign up status
+     * @author Sherry Gao
+     */
+    private void checkEventOptions() {
+        List<String> participants = event.getEvtParticipants();
+        String userEmail = (((MyApplication) this.getApplication()).getUser().getEmail());
+        if(((MyApplication) this.getApplication()).getUser().getUserId() == event.getHostId()) {
+            determineTimeButton.setOnClickListener(this::determineTime);
+            withdrawButton.setClickable(false);
+            signUpButton.setClickable(false);
+        }
+        else if(participants.contains(userEmail)) {
+            withdrawButton.setOnClickListener(this::withdrawEvent);
+            signUpButton.setClickable(false);
+            determineTimeButton.setClickable(false);
+        }
+        else {
+            signUpButton.setOnClickListener(this::onClick);
+            withdrawButton.setClickable(false);
+            determineTimeButton.setClickable(false);
+        }
+
+        String evtDeterminedTimeSlot = db.getDeterminedTimeSlot(event.getEvtId());
+        if(!evtDeterminedTimeSlot.equals("")) {
+            determineTimeButton.setText("Event Time is " + evtDeterminedTimeSlot);
+            determineTimeButton.setClickable(false);
+        }
     }
 }

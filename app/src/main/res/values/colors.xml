@@ -12,4 +12,5 @@
     <color name="add_button_green">#90D9A0</color>
     <color name="red">#B61111</color>
     <color name="add_button_better_green">#3CBF59</color>
+    <color name="unselected_button_grey">#696969</color>
 </resources>
