@@ -520,6 +520,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             String participantsString = cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS"));
             int evtHostId = cursor.getInt(cursor.getColumnIndexOrThrow("HOST_ID"));
+
+            classType = new TypeToken<List<Integer>>() {}.getType();
             List<Integer> participants = new Gson().fromJson(participantsString, classType);
 
             for(Integer i : participants) {
