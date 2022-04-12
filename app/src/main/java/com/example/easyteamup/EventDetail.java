@@ -133,16 +133,22 @@ public class EventDetail extends AppCompatActivity {
             determineTimeButton.setOnClickListener(this::determineTime);
             withdrawButton.setClickable(false);
             signUpButton.setClickable(false);
+            withdrawButton.setVisibility(View.GONE);
+            signUpButton.setVisibility(View.GONE);
         }
         else if(participants.contains(userId)) {
             withdrawButton.setOnClickListener(this::withdrawEvent);
             signUpButton.setClickable(false);
             determineTimeButton.setClickable(false);
+            signUpButton.setVisibility(View.GONE);
+            determineTimeButton.setVisibility(View.GONE);
         }
         else {
             signUpButton.setOnClickListener(this::onClick);
             withdrawButton.setClickable(false);
+            withdrawButton.setVisibility(View.GONE);
             determineTimeButton.setClickable(false);
+            determineTimeButton.setVisibility(View.GONE);
         }
 
         String evtDeterminedTimeSlot = db.getDeterminedTimeSlot(event.getEvtId());

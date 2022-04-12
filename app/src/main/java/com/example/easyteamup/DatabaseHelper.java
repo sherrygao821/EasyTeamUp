@@ -535,7 +535,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return "";
     }
 
-
     /**
      * get determined time slot
      * @param evtId
