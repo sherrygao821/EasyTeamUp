@@ -145,10 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return boolean
      * @author Andy / Sherry Gao
      */
-    public boolean addEvent (Event event, List<String> invitees){
-
-        Log.d("DATABASE", new Gson().toJson(event));
-        Log.d("DATABASE", new Gson().toJson(invitees));
+    public boolean addEvent (Event event, List<Integer> invitees){
 
         SQLiteDatabase db = this .getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -157,7 +154,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String timeSlotsString = new Gson().toJson(event.getEvtTimeSlots());
 
         cv.put(COLUMN_EVT_NAME, event.getEvtName());
-        // TODO: SEND NOTI TO INVITEES
         cv.put(COLUMN_HOST_ID, String.valueOf(event.getHostId()));
         cv.put(COLUMN_TIME, event.getEvtSignUpDueDate());
         cv.put(COLUMN_LOCATION, event.getEvtLocation());
@@ -173,7 +169,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long insert = db.insert(EVENT_TABLE,null, cv);
 
         if (insert == -1) return false;
+
+        // send out invites
+        for(Integer invitee : invitees) {
+            Notification invite = new Notification(Math.toIntExact(insert), event.getHostId(), invitee, 3);
+            addNoti(invite);
+        }
         return true;
+    }
+
+    /**
+     * get userId by email
+     * @param email
+     * @return
+     * @author Sherry Gao
+     */
+    public int getUserIdByEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM USER_TABLE WHERE EMAIL = ?", new String[]{String.valueOf(email)});
+
+        if(cursor.moveToFirst()) {
+            return cursor.getInt(cursor.getColumnIndexOrThrow("ID"));
+        }
+        else {
+            return -1;
+        }
     }
 
     /**
@@ -317,8 +337,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Type classType = new TypeToken<Map<String, Integer>>() {}.getType();
                 timeslots = new Gson().fromJson(cursor.getString(cursor.getColumnIndexOrThrow("TIMESLOTS")), classType);
 
-                List<String> participants = new ArrayList<>();
-                classType = new TypeToken<List<String>>() {}.getType();
+                List<Integer> participants = new ArrayList<>();
+                classType = new TypeToken<List<Integer>>() {}.getType();
                 participants = new Gson().fromJson(cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS")), classType);
 
                 // String duration = cursor.getString(cursor.getColumnIndexOrThrow("DURATION"));
@@ -337,21 +357,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Add user to event participants list
      * @param evtId
-     * @param userEmail
+     * @param userId
      * @return boolean
      * @author Sherry Gao
      */
-    public boolean signUpEvent(int evtId, String userEmail, Map<String, Integer> map) {
+    public boolean signUpEvent(int evtId, int userId, Map<String, Integer> map) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_ID = ?", new String[] {String.valueOf(evtId)});
 
         if(cursor.moveToFirst()) {
             String participantsString = cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS"));
-            Type type = new TypeToken<List<String>>() {}.getType();
-            List<String> participantsList = new Gson().fromJson(participantsString, type);
+            Type type = new TypeToken<List<Integer>>() {}.getType();
+            List<Integer> participantsList = new Gson().fromJson(participantsString, type);
 
-            participantsList.add(userEmail);
+            participantsList.add(userId);
             participantsString = new Gson().toJson(participantsList);
 
             String timeslotsString = new Gson().toJson(map);
@@ -378,6 +398,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @author Andy
      */
     public boolean addNoti(Notification noti){
+
         SQLiteDatabase db = this .getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -522,9 +543,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @author Sherry Gao
      */
     public boolean withdrawEvent(int evtId, String userEmail) {
+
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_ID = ?", new String[]{String.valueOf(evtId)});
-
 
         if (cursor.moveToFirst()) {
             String participants = cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS"));

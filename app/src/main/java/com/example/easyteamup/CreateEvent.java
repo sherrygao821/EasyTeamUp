@@ -133,18 +133,20 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
             timeSlotsMap.put(s, 0);
         }
 
-        String hostEmail = ((MyApplication) this.getApplication()).getUser().getEmail();
-        List<String> participants = new ArrayList<>();
-        participants.add(hostEmail);
+        int hostId = ((MyApplication) this.getApplication()).getUser().getUserId();
+        List<Integer> participants = new ArrayList<>();
+        participants.add(hostId);
 
-        List<String> inviteesList;
+        List<Integer> inviteesList = new ArrayList<>();
         String inviteList = newEvtInvitations.getText().toString();
-        if(inviteList.equals("")) {
-            inviteesList = new ArrayList<String>();
-        }
-        else {
+        // if user entered invitees
+        if(!inviteList.equals("")) {
             String[] invitees = inviteList.split(";");
-            inviteesList = new ArrayList<String>(Arrays.asList(invitees));
+            for (String s : invitees) {
+                int userId = db.getUserIdByEmail(s);
+                if(userId != -1)
+                    inviteesList.add(userId);
+            }
         }
 
         // create new event

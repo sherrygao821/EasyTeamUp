@@ -127,14 +127,14 @@ public class EventDetail extends AppCompatActivity {
      * @author Sherry Gao
      */
     private void checkEventOptions() {
-        List<String> participants = event.getEvtParticipants();
-        String userEmail = (((MyApplication) this.getApplication()).getUser().getEmail());
-        if(((MyApplication) this.getApplication()).getUser().getUserId() == event.getHostId()) {
+        List<Integer> participants = event.getEvtParticipants();
+        int userId = (((MyApplication) this.getApplication()).getUser().getUserId());
+        if(userId == event.getHostId()) {
             determineTimeButton.setOnClickListener(this::determineTime);
             withdrawButton.setClickable(false);
             signUpButton.setClickable(false);
         }
-        else if(participants.contains(userEmail)) {
+        else if(participants.contains(userId)) {
             withdrawButton.setOnClickListener(this::withdrawEvent);
             signUpButton.setClickable(false);
             determineTimeButton.setClickable(false);

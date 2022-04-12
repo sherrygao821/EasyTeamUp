@@ -12,7 +12,7 @@ public class Event {
     private String evtTime;
     private String evtLocation;
     private Map<String, Integer> evtTimeSlots;
-    private List<String> evtParticipants;
+    private List<Integer> evtParticipants;
     private int evtType;
     private boolean isActive;
     private boolean isPublic;
@@ -39,7 +39,7 @@ public class Event {
         this.evtDeterminedTime = "";
     }
 
-    public Event(String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic, String evtDuration) {
+    public Event(String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtLocation, Map<String, Integer> evtTimeSlots, List<Integer> evtParticipants, int evtType, boolean isActive, boolean isPublic, String evtDuration) {
         this.evtDuration = evtDuration;
         this.evtName = evtName;
         this.hostId = hostId;
@@ -54,7 +54,7 @@ public class Event {
         this.evtDeterminedTime = "";
     }
 
-    public Event(int evtId, String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtTime, String evtLocation, Map<String, Integer> evtTimeSlots, List<String> evtParticipants, int evtType, boolean isActive, boolean isPublic, String evtDuration) {
+    public Event(int evtId, String evtName, int hostId, String evtDescription, String evtSignUpDueDate, String evtTime, String evtLocation, Map<String, Integer> evtTimeSlots, List<Integer> evtParticipants, int evtType, boolean isActive, boolean isPublic, String evtDuration) {
         this.evtId = evtId;
         this.evtName = evtName;
         this.hostId = hostId;
@@ -151,11 +151,11 @@ public class Event {
         this.evtTimeSlots = evtTimeSlots;
     }
 
-    public List<String> getEvtParticipants() {
+    public List<Integer> getEvtParticipants() {
         return evtParticipants;
     }
 
-    public void setEvtParticipants(List<String> evtParticipants) {
+    public void setEvtParticipants(List<Integer> evtParticipants) {
         this.evtParticipants = evtParticipants;
     }
 

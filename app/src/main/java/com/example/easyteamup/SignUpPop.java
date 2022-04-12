@@ -105,14 +105,14 @@ public class SignUpPop extends AppCompatActivity {
      * @author Sherry Gao
      */
     private void signUpOnClick(View v) {
-        String userEmail = ((MyApplication) this.getApplication()).getUser().getEmail();
+        int userId = ((MyApplication) this.getApplication()).getUser().getUserId();
         Map<String, Integer> map = event.getEvtTimeSlots();
         for(String s : selectedTimeSlots) {
             if(map.containsKey(s)) {
                 map.put(s, map.get(s) + 1);
             }
         }
-        boolean result = db.signUpEvent(event.getEvtId(), userEmail, map);
+        boolean result = db.signUpEvent(event.getEvtId(), userId, map);
         // sign up successfully
         if(result) {
             Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
