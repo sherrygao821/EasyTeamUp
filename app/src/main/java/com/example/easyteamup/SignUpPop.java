@@ -24,7 +24,6 @@ import java.util.Map;
 public class SignUpPop extends AppCompatActivity {
 
     TextView popEvtName;
-    ImageView popClose;
     Button popSignUp;
     ListView selectTimeSlots;
 
@@ -49,7 +48,6 @@ public class SignUpPop extends AppCompatActivity {
 
         selectedTimeSlots = new ArrayList<>();
 
-        popClose = findViewById(R.id.popClose);
         popSignUp = findViewById(R.id.popSignUp);
         popEvtName = findViewById(R.id.popEvtName);
         selectTimeSlots = findViewById(R.id.selectTimeSlots);
@@ -61,14 +59,18 @@ public class SignUpPop extends AppCompatActivity {
             timeslots.add(entry.getKey());
         }
 
-        timeslotsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, timeslots);
+        timeslotsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, timeslots);
         selectTimeSlots.setAdapter(timeslotsAdapter);
+
 
         selectTimeSlots.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(!selectedTimeSlots.contains(timeslots.get(position))) {
                     selectedTimeSlots.add(timeslots.get(position));
+                }
+                else {
+                    selectedTimeSlots.remove(timeslots.get(position));
                 }
             }
         });
@@ -77,7 +79,6 @@ public class SignUpPop extends AppCompatActivity {
 
         setEventInfo();
 
-        popClose.setOnClickListener(this::closeOnClick);
         popSignUp.setOnClickListener(this::signUpOnClick);
 
     }
@@ -87,16 +88,7 @@ public class SignUpPop extends AppCompatActivity {
      * @author Sherry Gao
      */
     private void setEventInfo() {
-        popEvtName.setText(event.getEvtName());
-    }
-
-    /**
-     * Close the pop up
-     * @param v
-     * @author Sherry Gao
-     */
-    private void closeOnClick(View v) {
-        switchActivity("Detail");
+        popEvtName.setText("Event Name: " + event.getEvtName());
     }
 
     /**
