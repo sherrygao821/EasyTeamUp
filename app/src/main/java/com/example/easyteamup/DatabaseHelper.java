@@ -151,37 +151,73 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return boolean
      * @author Andy / Sherry Gao
      */
-    public boolean addEvent (Event event, List<Integer> invitees){
+    public boolean addEvent (Event event, List<Integer> invitees, boolean isEdit){
 
         SQLiteDatabase db = this .getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        String participantsString = new Gson().toJson(event.getEvtParticipants());
-        String timeSlotsString = new Gson().toJson(event.getEvtTimeSlots());
+        if(isEdit) {
+            Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_ID = ?", new String[]{String.valueOf(event.getEvtId())});
+            if (cursor.moveToFirst()) {
+                String timeSlotsString = new Gson().toJson(event.getEvtTimeSlots());
+                cv.put(COLUMN_EVT_NAME, event.getEvtName());
+                cv.put(COLUMN_TIME, event.getEvtSignUpDueDate());
+                cv.put(COLUMN_LOCATION, event.getEvtLocation());
+                cv.put(COLUMN_EVT_TYPE, String.valueOf(event.getEvtType()));
+                cv.put(COLUMN_TIMESLOTS, timeSlotsString);
+                cv.put(COLUMN_EVT_DURATION, event.getEvtDuration());
+                cv.put(COLUMN_EVT_PUBLIC, event.isPublic());
+                cv.put(COLUMN_EVT_DESCRIPTION, event.getEvtDescription());
+                db.update(EVENT_TABLE, cv, "EVT_ID" + "= ?", new String[] {String.valueOf(event.getEvtId())});
 
-        cv.put(COLUMN_EVT_NAME, event.getEvtName());
-        cv.put(COLUMN_HOST_ID, String.valueOf(event.getHostId()));
-        cv.put(COLUMN_TIME, event.getEvtSignUpDueDate());
-        cv.put(COLUMN_LOCATION, event.getEvtLocation());
-        cv.put(COLUMN_EVT_TYPE, String.valueOf(event.getEvtType()));
-        cv.put(COLUMN_TIMESLOTS, timeSlotsString);
-        cv.put(COLUMN_PARTICIPANTS, participantsString);
-        cv.put(COLUMN_EVT_DURATION, event.getEvtDuration());
-        cv.put(COLUMN_EVT_PUBLIC, event.isPublic());
-        cv.put(COLUMN_EVT_DESCRIPTION, event.getEvtDescription());
-        cv.put(COLUMN_EVT_DETERMINED_TIME, event.getEvtDeterminedTime());
+                // send out invites
+                for(Integer invitee : invitees) {
+                    Notification invite = new Notification(event.getEvtId(), event.getHostId(), invitee, 3);
+                    addNoti(invite);
+                }
 
-        //-1 if failed to insert
-        long insert = db.insert(EVENT_TABLE,null, cv);
+                Type classType = new TypeToken<List<Integer>>() {}.getType();
+                String buf = cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS"));
+                List<Integer> participants = new Gson().fromJson(buf, classType);
 
-        if (insert == -1) return false;
+                // TODO: do i use type 2?
+                for(Integer p : participants) {
+                    Notification invite = new Notification(event.getEvtId(), event.getHostId(), p, 2);
+                    addNoti(invite);
+                }
+                return true;
+            }
 
-        // send out invites
-        for(Integer invitee : invitees) {
-            Notification invite = new Notification(Math.toIntExact(insert), event.getHostId(), invitee, 3);
-            addNoti(invite);
+            return false;
         }
-        return true;
+        else {
+            String participantsString = new Gson().toJson(event.getEvtParticipants());
+            String timeSlotsString = new Gson().toJson(event.getEvtTimeSlots());
+
+            cv.put(COLUMN_EVT_NAME, event.getEvtName());
+            cv.put(COLUMN_HOST_ID, String.valueOf(event.getHostId()));
+            cv.put(COLUMN_TIME, event.getEvtSignUpDueDate());
+            cv.put(COLUMN_LOCATION, event.getEvtLocation());
+            cv.put(COLUMN_EVT_TYPE, String.valueOf(event.getEvtType()));
+            cv.put(COLUMN_TIMESLOTS, timeSlotsString);
+            cv.put(COLUMN_PARTICIPANTS, participantsString);
+            cv.put(COLUMN_EVT_DURATION, event.getEvtDuration());
+            cv.put(COLUMN_EVT_PUBLIC, event.isPublic());
+            cv.put(COLUMN_EVT_DESCRIPTION, event.getEvtDescription());
+            cv.put(COLUMN_EVT_DETERMINED_TIME, event.getEvtDeterminedTime());
+
+            //-1 if failed to insert
+            long insert = db.insert(EVENT_TABLE,null, cv);
+
+            if (insert == -1) return false;
+
+            // send out invites
+            for(Integer invitee : invitees) {
+                Notification invite = new Notification(Math.toIntExact(insert), event.getHostId(), invitee, 3);
+                addNoti(invite);
+            }
+            return true;
+        }
     }
 
     /**
@@ -298,8 +334,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             while (!cursor.isAfterLast()) {
 
                 // check whether or not to add the evnt to the list
-                boolean isPublic = true;
-                if(!isPublic) {
+                int isPublic = cursor.getInt(cursor.getColumnIndexOrThrow("IS_PUBLIC"));
+                if(isPublic == 0) {
                     cursor.moveToNext();
                     continue;
                 }
@@ -347,11 +383,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 classType = new TypeToken<List<Integer>>() {}.getType();
                 participants = new Gson().fromJson(cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS")), classType);
 
-                // String duration = cursor.getString(cursor.getColumnIndexOrThrow("DURATION"));
-                String duration = "12";
-                String evtDescription = "Event Description";
+                String duration = cursor.getString(cursor.getColumnIndexOrThrow("DURATION"));
+                String evtDescription = cursor.getString(cursor.getColumnIndexOrThrow("EVT_DESCRIPTION"));
 
-                Event event = new Event(evtId, evtName, hostId, evtDescription, time, null, location, timeslots, participants, type, true, isPublic, duration);
+                Event event = new Event(evtId, evtName, hostId, evtDescription, time, null, location, timeslots, participants, type, true, true, duration);
                 allEvents.add(event);
                 cursor.moveToNext();
             }

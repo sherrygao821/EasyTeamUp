@@ -7,6 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -68,8 +69,8 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
     private int hostId;
     private String location;
 
-    public CreateEvent() {
-    }
+    private Event currEvt;
+    private boolean isEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,18 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         context = this;
         timeslotsString = new ArrayList<>();
         db = new DatabaseHelper(this);
+
+        // get info passed
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+
+            String eventInfo = extras.getString("eventInfo");
+            currEvt = new Gson().fromJson(eventInfo, Event.class);
+            isEdit = true;
+        }
+        else {
+            isEdit = false;
+        }
 
         newEvtTypePicker = findViewById(R.id.newEvtTypePicker);
         newEvtPrivate = findViewById(R.id.newEvtPrivate);
@@ -105,6 +118,10 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         timeslotsLv.setAdapter(timeslotsAdapter);
         timeslotsLv.setEnabled(false);
 
+        newEvtPublic.setChecked(true);
+        newEvtPrivate.setChecked(false);
+        isPublic = true;
+
         // set button listeners
         newEvtTypePicker.setOnItemSelectedListener(this);
         newEvtPrivate.setOnClickListener(this::onCheckboxClicked);
@@ -113,6 +130,40 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         evtTimeSlotDatePicker.setOnClickListener(this::handleTimeSlotDate);
         evtTimeSlotTimePickerSubmit.setOnClickListener(this::submitTimeSlotTime);
         evtSubmit.setOnClickListener(this::submitEvent);
+
+        if(isEdit) {
+            setCurrEvtInfo();
+        }
+    }
+
+    /**
+     * if in edit mode, set current
+     */
+    private void setCurrEvtInfo() {
+        newEvtTypePicker.setSelection(currEvt.getEvtType());
+        if(currEvt.isPublic()) {
+            newEvtPublic.setChecked(true);
+            newEvtPrivate.setChecked(false);
+            isPublic = currEvt.isPublic();
+        }
+        newEvtName.setText(currEvt.getEvtName());
+        newEvtDescript.setText(currEvt.getEvtDescription());
+        evtDurationHours.setText(currEvt.getEvtDuration());
+        evtLocation.setText(currEvt.getEvtLocation());
+        evtDueDatePicker.setText(currEvt.getEvtSignUpDueDate());
+
+        evtDueTimeString = currEvt.getEvtSignUpDueDate();
+    }
+
+    private boolean isAllFilledIn() {
+        if(newEvtDescript.getText().toString().equals("")) return false;
+        if(evtLocation.getText().toString().equals("")) return false;
+        if(newEvtName.getText().toString().equals("")) return false;
+        if(evtDurationHours.getText().toString().equals("")) return false;
+        if(timeslotsString.size() == 0) return false;
+        if(evtDueTimeString.equals("")) return false;
+
+        return true;
     }
 
     /**
@@ -121,6 +172,10 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
      * @author Sherry Gao
      */
     public void submitEvent(View view) {
+        if(!isAllFilledIn()) {
+            Toast.makeText(this, "Please Fill In Every Field!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         // collect all event construction params
         hostId = ((MyApplication) this.getApplication()).getUser().getUserId();
         evtDescript = newEvtDescript.getText().toString();
@@ -149,11 +204,31 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
             }
         }
 
-        // create new event
-        Event event;
-        event = new Event(evtName, hostId, evtDescript, evtDueTimeString, location, timeSlotsMap, participants, evtType, true, isPublic, evtDuration);
+        // save info back to db
+        boolean finished = false;
 
-        if (db.addEvent(event, inviteesList)) {
+        if(isEdit) {
+            currEvt.setEvtType(evtType);
+            currEvt.setEvtName(evtName);
+            currEvt.setEvtDescription(evtDescript);
+            currEvt.setEvtDuration(evtDuration);
+            currEvt.setEvtLocation(location);
+            currEvt.setPublic(isPublic);
+            currEvt.setEvtSignUpDueDate(evtDueTimeString);
+            currEvt.setEvtTimeSlots(timeSlotsMap);
+
+            if (db.addEvent(currEvt, inviteesList, isEdit))
+                finished = true;
+        }
+        else {
+            Event event;
+            event = new Event(evtName, hostId, evtDescript, evtDueTimeString, location, timeSlotsMap, participants, evtType, true, isPublic, evtDuration);
+
+            if (db.addEvent(event, inviteesList, isEdit))
+                finished = true;
+        }
+
+        if(finished) {
             Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -197,7 +272,7 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         Calendar calendar = Calendar.getInstance();
 
         int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
+        int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int hour = calendar.get(Calendar.HOUR);
         int minute = calendar.get(Calendar.MINUTE);
@@ -224,7 +299,7 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
                             slotHour = i;
                             slotMinute = i1;
-                            evtTimeSlotString = String.valueOf(slotYear) + "-" + String.valueOf(slotMonth) + "-" + String.valueOf(slotDay) + "-" + String.valueOf(slotHour) + ":" + String.valueOf(slotMinute);
+                            evtTimeSlotString = String.valueOf(slotYear) + "-" + String.valueOf(slotMonth + 1) + "-" + String.valueOf(slotDay) + "-" + String.valueOf(slotHour) + ":" + String.valueOf(slotMinute);
                             evtTimeSlotDatePicker.setText(evtTimeSlotString);
                         }
                     }, hour, minute, true);
@@ -247,7 +322,7 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         Calendar calendar = Calendar.getInstance();
 
         int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
+        int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int hour = calendar.get(Calendar.HOUR);
         int minute = calendar.get(Calendar.MINUTE);
@@ -269,7 +344,7 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
                             evtDueHour = i;
                             evtDueMinute = i1;
-                            evtDueTimeString = String.valueOf(evtDueYear) + "-" + String.valueOf(evtDueMonth) + "-" + String.valueOf(evtDueDay) + "-" + String.valueOf(evtDueHour) + ":" + String.valueOf(evtDueMinute);
+                            evtDueTimeString = String.valueOf(evtDueYear) + "-" + String.valueOf(evtDueMonth + 1) + "-" + String.valueOf(evtDueDay) + "-" + String.valueOf(evtDueHour) + ":" + String.valueOf(evtDueMinute);
                             evtDueDatePicker.setText(evtDueTimeString);
                         }
                     }, hour, minute, true);

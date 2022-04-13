@@ -25,9 +25,9 @@ public class EventDetail extends AppCompatActivity {
 
     private Event event;
 
-    TextView evtDetailUserName, evtDeadline, evtDetailType, evtDetailDescript, evtDetailLoc, evtDetailNoP, evtDetailEmail;
+    TextView evtDetailUserName, evtDeadline, evtDetailType, evtDetailDescript, evtDetailLoc, evtDetailNoP, evtDetailEmail, evtDetailDuration;
     ImageView evtDetailUserPic;
-    Button signUpButton, withdrawButton, determineTimeButton;
+    Button signUpButton, withdrawButton, determineTimeButton, EditEventButton;
     ListView showTimeSlots;
 
     DatabaseHelper db;
@@ -77,6 +77,18 @@ public class EventDetail extends AppCompatActivity {
     }
 
     /**
+     * go to edit event page
+     * @param v
+     */
+    public void editEvent(View v) {
+        Intent intent = new Intent(this, CreateEvent.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        String eventInfo = new Gson().toJson(event);
+        intent.putExtra("eventInfo", eventInfo);
+        startActivity(intent);
+    }
+
+    /**
      * withdraw with this event if signed up
      * @param v
      */
@@ -120,6 +132,7 @@ public class EventDetail extends AppCompatActivity {
         evtDetailLoc.setText(event.getEvtLocation());
         evtDetailNoP.setText(String.valueOf(event.getEvtParticipants().size()));
         evtDetailEmail.setText(String.valueOf(event.getHostEmail()));
+        evtDetailDuration.setText(String.valueOf(event.getEvtDuration()));
     }
 
     /**
@@ -131,6 +144,7 @@ public class EventDetail extends AppCompatActivity {
         int userId = (((MyApplication) this.getApplication()).getUser().getUserId());
         if(userId == event.getHostId()) {
             determineTimeButton.setOnClickListener(this::determineTime);
+            EditEventButton.setOnClickListener(this::editEvent);
             withdrawButton.setClickable(false);
             signUpButton.setClickable(false);
             withdrawButton.setVisibility(View.GONE);
@@ -142,6 +156,8 @@ public class EventDetail extends AppCompatActivity {
             determineTimeButton.setClickable(false);
             signUpButton.setVisibility(View.GONE);
             determineTimeButton.setVisibility(View.GONE);
+            EditEventButton.setVisibility(View.GONE);
+            EditEventButton.setClickable(false);
         }
         else {
             signUpButton.setOnClickListener(this::onClick);
@@ -149,6 +165,8 @@ public class EventDetail extends AppCompatActivity {
             withdrawButton.setVisibility(View.GONE);
             determineTimeButton.setClickable(false);
             determineTimeButton.setVisibility(View.GONE);
+            EditEventButton.setVisibility(View.GONE);
+            EditEventButton.setClickable(false);
         }
 
         String evtDeterminedTimeSlot = db.getDeterminedTimeSlot(event.getEvtId());
@@ -176,5 +194,7 @@ public class EventDetail extends AppCompatActivity {
         showTimeSlots = findViewById(R.id.showTimeSlots);
         withdrawButton = findViewById(R.id.withdrawButton);
         determineTimeButton = findViewById(R.id.determineTimeButton);
+        EditEventButton = findViewById(R.id.EditEventButton);
+        evtDetailDuration = findViewById(R.id.evtDetailDuration);
     }
 }

@@ -35,8 +35,10 @@
     <string name="selectTime">Select Time</string>
     <string name="evtTimeSlots">Event Start Time</string>
     <string name="evtDuration">Event Duration</string>
-    <string name="evtTimeSlotPickerSubmit">Submit</string>
-    <string name="evtDurationHours">How long is your event in hours?</string>
+    <string name="detailEvtDuration">Event Duration</string>
+    <string name="evtTimeSlotPickerSubmit">Add</string>
+    <string name="editEvent">Edit Event</string>
+    <string name="evtDurationHours">How long is your event? Eg. 2hrs</string>
     <string name="evtDescript">Tell others more about your event!</string>
     <string name="evtSubmit">Submit Event</string>
     <string name="evtLocation">Where is your event taking place?</string>

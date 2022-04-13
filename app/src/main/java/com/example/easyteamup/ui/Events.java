@@ -32,8 +32,6 @@ public class Events extends Fragment {
 
     DatabaseHelper db;
 
-    ArrayAdapter<String> timeslotsAdapter;
-
     private List<Event> allEvents;
 
     public Events() {
@@ -71,9 +69,6 @@ public class Events extends Fragment {
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-
-                Log.d("EVENT_CLICK", String.valueOf(position));
-
                 // initiate Event Detail Page w Event Data
                 Intent intent = new Intent(getActivity(), EventDetail.class);
                 intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);

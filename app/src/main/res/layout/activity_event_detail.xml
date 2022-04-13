@@ -119,6 +119,34 @@
                 android:layout_marginStart="14dp"
                 android:textColor="@color/font_grey"
                 android:textSize="15sp"
+                android:text="@string/detailEvtDuration"/>
+            <TextView
+                android:id="@+id/evtDetailDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="14dp"
+                android:layout_marginStart="14dp"
+                android:textColor="@color/font_grey"
+                android:textSize="24sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/event_round_corners">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="14dp"
+                android:layout_marginStart="14dp"
+                android:textColor="@color/font_grey"
+                android:textSize="15sp"
                 android:text="@string/location"/>
             <TextView
                 android:id="@+id/evtDetailLoc"
@@ -228,6 +256,22 @@
             android:textSize="20sp"
             android:textAllCaps="false"
             android:background="@drawable/button_round_corners"/>
+
+        <Button
+            android:id="@+id/EditEventButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/editEvent"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:background="@drawable/button_round_corners"/>
+
+
 
     </LinearLayout>
 </ScrollView>
