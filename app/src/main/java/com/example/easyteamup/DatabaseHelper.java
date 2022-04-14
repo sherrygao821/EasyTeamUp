@@ -114,12 +114,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean checkUser(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
-//        db.execSQL("DROP TABLE IF EXISTS " + EVENT_TABLE);
-//        db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_TABLE);
-//        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, " + COLUMN_EVT_DURATION + " TEXT, " + COLUMN_EVT_TYPE + " INT, " + COLUMN_EVT_DESCRIPTION + " TEXT, " + COLUMN_EVT_PUBLIC + " BOOLEAN, " + COLUMN_EVT_DETERMINED_TIME + " TEXT )";
-//        String createNotiTableStatement = "CREATE TABLE " + NOTIFICATION_TABLE + " (" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_ID + " INT, " + COLUMN_FROM_ID + " INT, " + COLUMN_TO_ID + " INT, " + COLUMN_NOTIFICATION_TYPE + " INT)";
-//        db.execSQL(createEventTableStatement);
-//        db.execSQL(createNotiTableStatement);
+        db.execSQL("DROP TABLE IF EXISTS " + EVENT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_TABLE);
+        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, " + COLUMN_EVT_DURATION + " TEXT, " + COLUMN_EVT_TYPE + " INT, " + COLUMN_EVT_DESCRIPTION + " TEXT, " + COLUMN_EVT_PUBLIC + " BOOLEAN, " + COLUMN_EVT_DETERMINED_TIME + " TEXT )";
+        String createNotiTableStatement = "CREATE TABLE " + NOTIFICATION_TABLE + " (" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_ID + " INT, " + COLUMN_FROM_ID + " INT, " + COLUMN_TO_ID + " INT, " + COLUMN_NOTIFICATION_TYPE + " INT)";
+        db.execSQL(createEventTableStatement);
+        db.execSQL(createNotiTableStatement);
 //        Cursor cursor = db.rawQuery("SELECT ID, PHOTO FROM USER_TABLE WHERE EMAIL = ?", new String[] {username});
         Cursor cursor = db.rawQuery("SELECT ID FROM USER_TABLE WHERE EMAIL = ?", new String[] {username});
         if(cursor.getCount() > 0)
