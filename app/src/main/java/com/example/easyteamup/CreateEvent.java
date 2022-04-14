@@ -217,15 +217,20 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
             currEvt.setEvtSignUpDueDate(evtDueTimeString);
             currEvt.setEvtTimeSlots(timeSlotsMap);
 
-            if (db.addEvent(currEvt, inviteesList, isEdit) != -1)
-                finished = true;
+//            if (db.addEvent(currEvt, inviteesList, isEdit) != -1)
+//                finished = true;
+
+            finished = changeEventData(currEvt, inviteesList, isEdit);
+
         }
         else {
             Event event;
             event = new Event(evtName, hostId, evtDescript, evtDueTimeString, location, timeSlotsMap, participants, evtType, true, isPublic, evtDuration);
 
-            if (db.addEvent(event, inviteesList, isEdit) != -1)
-                finished = true;
+//            if (db.addEvent(event, inviteesList, isEdit) != -1)
+//                finished = true;
+
+            finished = changeEventData(event, inviteesList, isEdit);
         }
 
         if(finished) {
@@ -235,6 +240,13 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         }
         else
             Toast.makeText(this, "Try Again Please!", Toast.LENGTH_SHORT).show();
+    }
+
+    public boolean changeEventData(Event e, List<Integer> invitees, boolean isEdit) {
+        if (db.addEvent(e, invitees, isEdit) != -1)
+            return true;
+        else
+            return false;
     }
 
     /**

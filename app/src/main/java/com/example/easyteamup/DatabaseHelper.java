@@ -115,6 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean checkUser(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
 
+
 //        db.execSQL("DROP TABLE IF EXISTS " + EVENT_TABLE);
 //        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
 //        db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_TABLE);
