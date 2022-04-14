@@ -51,7 +51,7 @@ public class Login extends AppCompatActivity {
 
             // log in succeed
             if(res == 0) {
-                saveUserInfo(enteredEmail, enteredPass, res);
+                saveUserInfo(enteredEmail, enteredPass);
                 Log.d("LOGIN", "Log in succeeded");
                 switchActivity();
             }
@@ -62,7 +62,7 @@ public class Login extends AppCompatActivity {
             }
             // sign up succeed
             else if(res == 2){
-                saveUserInfo(enteredEmail, enteredPass, res);
+                saveUserInfo(enteredEmail, enteredPass);
                 Log.d("LOGIN", "Sign up succeeded");
                 switchActivity();
             }
@@ -97,24 +97,20 @@ public class Login extends AppCompatActivity {
                 return 1;
         }
         // sign up
-        else
+        else {
+            User user = new User(enteredEmail, enteredPass);
+            db.addUser(user);
             return 2;
+        }
     }
 
     /**
      * Retrieve and save user info to global variable
      * @param enteredEmail
      * @param enteredPass
-     * @param res
      * @author Sherry Gao
      */
-    public void saveUserInfo(String enteredEmail, String enteredPass, int res) {
-
-        // save new user data in database
-        if(res == 2) {
-            User user = new User(enteredEmail, enteredPass);
-            db.addUser(user);
-        }
+    public void saveUserInfo(String enteredEmail, String enteredPass) {
 
         Cursor cursor = db.checkUsernamePassword(enteredEmail, enteredPass);
 

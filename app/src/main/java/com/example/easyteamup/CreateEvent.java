@@ -217,14 +217,14 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
             currEvt.setEvtSignUpDueDate(evtDueTimeString);
             currEvt.setEvtTimeSlots(timeSlotsMap);
 
-            if (db.addEvent(currEvt, inviteesList, isEdit))
+            if (db.addEvent(currEvt, inviteesList, isEdit) != -1)
                 finished = true;
         }
         else {
             Event event;
             event = new Event(evtName, hostId, evtDescript, evtDueTimeString, location, timeSlotsMap, participants, evtType, true, isPublic, evtDuration);
 
-            if (db.addEvent(event, inviteesList, isEdit))
+            if (db.addEvent(event, inviteesList, isEdit) != -1)
                 finished = true;
         }
 
