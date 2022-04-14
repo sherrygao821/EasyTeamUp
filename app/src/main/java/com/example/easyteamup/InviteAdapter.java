@@ -46,10 +46,10 @@ public class InviteAdapter extends ArrayAdapter<Notification> {
             v = vi.inflate(resourceLayout, null);
         }
 
-        //TODO: REMOVE TESTING
-        db.addNoti(new Notification(0,1,2,2));
+        //TODO:  TESTING
+        //db.addNoti(new Notification(0,1,2,2));
 
-        db.addTempEvent(new Event(0,"new event",0,0));
+        //db.addTempEvent(new Event(0,"new event",0,0));
 
 
         //TESTING ENDs
@@ -94,25 +94,33 @@ public class InviteAdapter extends ArrayAdapter<Notification> {
         buttonAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.addNoti(new Notification(n.getEventID(),n.getTo(),n.getFrom(),0));
+                //TODO: TESTING
+                //db.addNoti(new Notification(n.getEventID(),n.getTo(),n.getFrom(),0));
 
                 //TODO: ADD To PARTICIPANTS & SIGNUp
+
+
                 int userId = n.getTo();
+                //db.deleteNoti(n.getNotiID());
+                //makeText(context, "Invitation accepted", LENGTH_SHORT).show();
+
                 boolean result = db.signUpEvent(n.getEventID(),userId,new HashMap<String,Integer>());
                 if (result) {
                     //remove this notification
-                    db.deleteNoti(n.getNotiID());
+                    //db.deleteNoti(n.getNotiID());
                     makeText(context, "Invitation accepted", LENGTH_SHORT).show();
                 } else {
                     makeText(context, "Failed to accept invitation, Please try again", LENGTH_SHORT).show();
                 }
+
+
             }
         });
 
         buttonDecline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.deleteNoti(n.getNotiID());
+                //db.deleteNoti(n.getNotiID());
                 makeText(context, "Invitation declined", LENGTH_SHORT).show();
             }
         });

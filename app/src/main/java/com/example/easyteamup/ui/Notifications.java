@@ -70,15 +70,15 @@ public class Notifications extends Fragment {
         */
 
         //TODO: REMOVE FOR TESTING
-        addNotiTest();
-        addInvTest();
+        //addNotiTest();
+        //addInvTest();
         //END TESTING
 
-        /*CORRECT VERSION:
+        //CORRECT VERSION:
         notiList = db.getNotification((((MyApplication) this.getActivity().getApplication()).getUser()));
         invList = db.getInvitations((((MyApplication) this.getActivity().getApplication()).getUser()));
 
-        */
+
 
         notificationListView.setAdapter(new NotiAdapter(getContext(), R.layout.item_notification, notiList));
         ListView invListView = rootView.findViewById(R.id.invlistview);
