@@ -46,25 +46,24 @@ public class EventDetail extends AppCompatActivity {
         if (extras != null) {
             String eventInfo = extras.getString("eventInfo");
             event = new Gson().fromJson(eventInfo, Event.class);
+            setPageInfo();
+            db = new DatabaseHelper(this);
+            if(!extras.getBoolean("isTest")) {
+                // initialize time slots list for adapter
+                List<String> timeslots = new ArrayList<>();
+                Map<String, Integer> map = event.getEvtTimeSlots();
+                for (Map.Entry<String,Integer> entry : map.entrySet()) {
+                    timeslots.add(entry.getKey());
+                }
+
+                timeslotsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, timeslots);
+                showTimeSlots.setAdapter(timeslotsAdapter);
+                showTimeSlots.setEnabled(false);
+
+                setEventInfo();
+                checkEventOptions();
+            }
         }
-
-        setPageInfo();
-
-        db = new DatabaseHelper(this);
-
-        // initialize time slots list for adapter
-        List<String> timeslots = new ArrayList<>();
-        Map<String, Integer> map = event.getEvtTimeSlots();
-        for (Map.Entry<String,Integer> entry : map.entrySet()) {
-            timeslots.add(entry.getKey());
-        }
-
-        timeslotsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, timeslots);
-        showTimeSlots.setAdapter(timeslotsAdapter);
-        showTimeSlots.setEnabled(false);
-
-        setEventInfo();
-        checkEventOptions();
     }
 
     /**
@@ -93,7 +92,8 @@ public class EventDetail extends AppCompatActivity {
      * @param v
      */
     public void withdrawEvent(View v) {
-        if(db.withdrawEvent(event.getEvtId(), userId)) {
+        userId = (((MyApplication) this.getApplication()).getUser().getUserId());
+        if(withdrawEventData(userId, event.getEvtId())) {
             Toast.makeText(this, "Successfully Withdraw From The Event!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -117,6 +117,19 @@ public class EventDetail extends AppCompatActivity {
         intent.putExtra("eventInfo", eventString);
 
         startActivity(intent);
+    }
+
+    /**
+     * withdrawEventData
+     * @param userId
+     * @param evtId
+     * @return
+     */
+    public boolean withdrawEventData(int userId, int evtId) {
+        if(db.withdrawEvent(evtId, userId))
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -181,7 +194,6 @@ public class EventDetail extends AppCompatActivity {
      * @author Sherry Gao
      */
     private void setPageInfo() {
-        userId = (((MyApplication) this.getApplication()).getUser().getUserId());
         evtDetailUserName = findViewById(R.id.evtDetailUserName);
         evtDeadline = findViewById(R.id.evtDeadline);
         evtDetailType = findViewById(R.id.evtDetailType);

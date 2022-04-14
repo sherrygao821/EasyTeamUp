@@ -155,9 +155,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return boolean
      * @author Andy / Sherry Gao
      */
-    public boolean addEvent (Event event, List<Integer> invitees, boolean isEdit){
+    public int addEvent (Event event, List<Integer> invitees, boolean isEdit){
 
-        SQLiteDatabase db = this .getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         if(isEdit) {
@@ -189,10 +189,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Notification invite = new Notification(event.getEvtId(), event.getHostId(), p, 2);
                     addNoti(invite);
                 }
-                return true;
+                return event.getEvtId();
             }
 
-            return false;
+            return -1;
         }
         else {
             String participantsString = new Gson().toJson(event.getEvtParticipants());
@@ -213,14 +213,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             //-1 if failed to insert
             long insert = db.insert(EVENT_TABLE,null, cv);
 
-            if (insert == -1) return false;
+            if (insert == -1) return -1;
 
             // send out invites
             for(Integer invitee : invitees) {
                 Notification invite = new Notification(Math.toIntExact(insert), event.getHostId(), invitee, 3);
                 addNoti(invite);
             }
-            return true;
+            return Math.toIntExact(insert);
         }
     }
 
