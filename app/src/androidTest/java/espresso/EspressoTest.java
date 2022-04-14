@@ -38,7 +38,9 @@ import com.example.easyteamup.MainActivity;
 import com.example.easyteamup.R;
 import com.example.easyteamup.SignUpPop;
 
-
+/** Black box tests with espresso
+ * @author Lucy Shi
+ */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class EspressoTest {
