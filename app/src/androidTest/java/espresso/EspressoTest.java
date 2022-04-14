@@ -59,24 +59,24 @@ public class EspressoTest {
         onView(withId(R.id.loginButton)).perform(click());
     }
 
-    @Test
-    public void emailLogin() {
-        // Type in user email
-        onView(withId(R.id.email))
-                .perform(click(), typeText(STRING_TO_BE_TYPED), closeSoftKeyboard());
-
-        // Check that the user email was recorded.
-        onView(withId(R.id.email)).check(matches(withText(STRING_TO_BE_TYPED)));
-    }
-
-    @Test
-    public void switchToMain() {
-        // Click the Login/Signup button
-        onView(withId(R.id.loginButton)).perform(click());
-
-        // Check that it switches to the main page with the "addEventButton"
-        onView(withId(R.id.addEventButton)).check(matches(isDisplayed()));
-    }
+//    @Test
+//    public void emailLogin() {
+//        // Type in user email
+//        onView(withId(R.id.email))
+//                .perform(click(), typeText(STRING_TO_BE_TYPED), closeSoftKeyboard());
+//
+//        // Check that the user email was recorded.
+//        onView(withId(R.id.email)).check(matches(withText(STRING_TO_BE_TYPED)));
+//    }
+//
+//    @Test
+//    public void switchToMain() {
+//        // Click the Login/Signup button
+//        onView(withId(R.id.loginButton)).perform(click());
+//
+//        // Check that it switches to the main page with the "addEventButton"
+//        onView(withId(R.id.addEventButton)).check(matches(isDisplayed()));
+//    }
 
     @Test
     public void createEvent() {
@@ -90,7 +90,46 @@ public class EspressoTest {
     }
 
     @Test
-    public void changeProfile() {
+    public void checkEventType() {
+        onView(withId(R.id.addEventButton)).perform(click());
+        // click on an item of type String in a spinner
+        // afterwards verify that it is clickable
+        onView(withId(R.id.newEvtTypePicker)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void checkEventCategory() {
+        onView(withId(R.id.addEventButton)).perform(click());
+        // Check the event category (private/public) can be safely selected
+        onView(withId(R.id.newEvtPrivate)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void clickTabProfile() {
+        // the user should be able to switch to the profile page
+        onView(withId(R.id.profile)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void checkProfileImage() {
+        onView(withId(R.id.profile)).perform(click());
+        // By clicking on the profile button the user should be able to
+        // see the default profile image
+        onView(withId(R.id.profile_image)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void updateProfile() {
+        onView(withId(R.id.profile)).perform(click());
+        // By clicking on the update profile button the user should
+        // go to the change profile page
+        onView(withId(R.id.bt_update_profile)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void changeFirstName() {
+        onView(withId(R.id.profile)).perform(click());
+        onView(withId(R.id.bt_update_profile)).perform(click());
         // Type in the user first name
         onView(withId(R.id.et_first_name))
                 .perform(click(), typeText(STRING_TO_BE_TYPED), closeSoftKeyboard());
@@ -101,6 +140,8 @@ public class EspressoTest {
 
     @Test
     public void changeProfilePicture() {
+        onView(withId(R.id.profile)).perform(click());
+        onView(withId(R.id.bt_update_profile)).perform(click());
         // Try to change the profile picture via clicking it
         onView(withId(R.id.imageView)).perform(click()).check(matches(isClickable()));
     }
@@ -115,37 +156,30 @@ public class EspressoTest {
     }
 
     @Test
-    public void clickTab() {
-        // The tab bar on the profile page should be clickable
-        onView(withId(R.id.tabLayout)).perform(click()).check(matches(isClickable()));
+    public void clickTabNotifications() {
+        // the user should be able to switch to the notifications page
+        onView(withId(R.id.notifications)).check(matches(isClickable()));
     }
 
     @Test
-    public void updateProfile() {
-        // By clicking on the update profile button the user should go back to the main page
-        onView(withId(R.id.bt_register)).perform(click());
-        onView(withId(R.id.profile_image)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void checkEventCategory() {
-        // click on an item of type String in a spinner
-        // afterwards verify that the view with the R.id.newEvtTypePicker id contains "Sports"
-        onView(withId(R.id.newEvtTypePicker)).perform(click())
-                .check(matches(withText(containsString("Sports"))));
+    public void checkNotiEventName() {
+        onView(withId(R.id.notifications)).perform(click());
+        // for any notification invite the user should be able to see the event name
+        onView(withId(R.id.notiEventName)).check(matches(isDisplayed()));
     }
 
     @Rule
     public ActivityTestRule<MainActivity> rule  = new  ActivityTestRule<>(MainActivity.class);
 
-//    @Test
-//    public void checkToast() throws Exception {
-//        onView(withId(R.id.change_profile)).perform(click());
-//
-//        onView(withId(R.id.imageView3)).perform(click());
-//        onView(withText("Avatar Updated!"))
-//                .inRoot(withDecorView(not(is(rule.getActivity().getWindow().getDecorView()))))
-//                .check(matches(isDisplayed()));
-//    }
+    @Test
+    public void checkToast() throws Exception {
+        onView(withId(R.id.profile)).perform(click());
+        onView(withId(R.id.bt_update_profile)).perform(click());
+
+        onView(withId(R.id.imageView3)).perform(click());
+        onView(withText("Avatar Updated!"))
+                .inRoot(withDecorView(not(is(rule.getActivity().getWindow().getDecorView()))))
+                .check(matches(isDisplayed()));
+    }
 
 }
