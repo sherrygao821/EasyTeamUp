@@ -139,7 +139,7 @@ public class ChangeProfile extends AppCompatActivity {
                 break;
         }
 //
-        Toast.makeText(this,"Avatar Update Successfully",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"Avatar Updated!",Toast.LENGTH_SHORT).show();
         ((MyApplication) this.getApplication()).getUser().setPhoto(avatarIdx);
     }
 

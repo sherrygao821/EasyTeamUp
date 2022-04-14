@@ -1,5 +1,7 @@
 package com.example.easyteamup;
 
+import static android.widget.Toast.*;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,12 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.easyteamup.classes.Event;
 import com.example.easyteamup.classes.Notification;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -90,16 +94,18 @@ public class InviteAdapter extends ArrayAdapter<Notification> {
         buttonAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.addNoti(new Notification(n.getEventID(),n.getTo(),n.getFrom(),1));
+                db.addNoti(new Notification(n.getEventID(),n.getTo(),n.getFrom(),0));
 
-                //TODO: ADD To PARTICIPANTS & SIGNUP
-                /*
-                String userEmail = db.getUserEmail(n.getTo());
-                db.signUpEvent(n.getEventID(),userEmail,new HashMap<String,Integer>());
-
-                 */
-                //remove this notification
-                db.deleteNoti(n.getNotiID());
+                //TODO: ADD To PARTICIPANTS & SIGNUp
+                int userId = n.getTo();
+                boolean result = db.signUpEvent(n.getEventID(),userId,new HashMap<String,Integer>());
+                if (result) {
+                    //remove this notification
+                    db.deleteNoti(n.getNotiID());
+                    makeText(context, "Invitation accepted", LENGTH_SHORT).show();
+                } else {
+                    makeText(context, "Failed to accept invitation, Please try again", LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -107,6 +113,7 @@ public class InviteAdapter extends ArrayAdapter<Notification> {
             @Override
             public void onClick(View view) {
                 db.deleteNoti(n.getNotiID());
+                makeText(context, "Invitation declined", LENGTH_SHORT).show();
             }
         });
 
