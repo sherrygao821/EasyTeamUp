@@ -74,6 +74,7 @@ public class Events extends Fragment {
                 intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                 String eventInfo = new Gson().toJson(allEvents.get(position - 1));
                 intent.putExtra("eventInfo", eventInfo);
+                intent.putExtra("isTest", false);
                 startActivity(intent);
             }
         });

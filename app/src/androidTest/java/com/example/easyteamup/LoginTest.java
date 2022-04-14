@@ -2,8 +2,6 @@ package com.example.easyteamup;
 
 import static org.junit.Assert.*;
 
-import android.content.Context;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -27,9 +25,23 @@ public class LoginTest {
     }
 
     @Test
-    public void testLogin() {
-        int res = loginActivity.checkLogin("sherryga@usc.edu", "1");
-        assertEquals("check log in", 1, res);
+    public void testSignUp() {
+        int res = loginActivity.checkLogin("tester1@usc.edu", "12345");
+        assertEquals("Test Sign Up", 2, res);
+    }
+
+    @Test
+    public void testLoginSuccess() {
+        loginActivity.checkLogin("tester2@usc.edu", "12345");
+        int res = loginActivity.checkLogin("tester2@usc.edu", "12345");
+        assertEquals("Test Log In Success", 0, res);
+    }
+
+    @Test
+    public void testLoginFailed() {
+        loginActivity.checkLogin("tester3@usc.edu", "12345");
+        int res = loginActivity.checkLogin("tester3@usc.edu", "1");
+        assertEquals("Test Log In Failure", 1, res);
     }
 
     @After
