@@ -61,24 +61,24 @@ public class EspressoTest {
         onView(withId(R.id.loginButton)).perform(click());
     }
 
-//    @Test
-//    public void emailLogin() {
-//        // Type in user email
-//        onView(withId(R.id.email))
-//                .perform(click(), typeText(STRING_TO_BE_TYPED), closeSoftKeyboard());
-//
-//        // Check that the user email was recorded.
-//        onView(withId(R.id.email)).check(matches(withText(STRING_TO_BE_TYPED)));
-//    }
-//
-//    @Test
-//    public void switchToMain() {
-//        // Click the Login/Signup button
-//        onView(withId(R.id.loginButton)).perform(click());
-//
-//        // Check that it switches to the main page with the "addEventButton"
-//        onView(withId(R.id.addEventButton)).check(matches(isDisplayed()));
-//    }
+    @Test
+    public void emailLogin() {
+        // Type in user email
+        onView(withId(R.id.email))
+                .perform(click(), typeText(STRING_TO_BE_TYPED), closeSoftKeyboard());
+
+        // Check that the user email was recorded.
+        onView(withId(R.id.email)).check(matches(withText(STRING_TO_BE_TYPED)));
+    }
+
+    @Test
+    public void switchToMain() {
+        // Click the Login/Signup button
+        onView(withId(R.id.loginButton)).perform(click());
+
+        // Check that it switches to the main page with the "addEventButton"
+        onView(withId(R.id.addEventButton)).check(matches(isDisplayed()));
+    }
 
     @Test
     public void createEvent() {
