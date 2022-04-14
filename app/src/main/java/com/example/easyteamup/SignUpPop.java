@@ -44,42 +44,42 @@ public class SignUpPop extends AppCompatActivity {
         if (extras != null) {
             String eventInfo = extras.getString("eventInfo");
             event = new Gson().fromJson(eventInfo, Event.class);
-        }
 
-        selectedTimeSlots = new ArrayList<>();
-
-        popSignUp = findViewById(R.id.popSignUp);
-        popEvtName = findViewById(R.id.popEvtName);
-        selectTimeSlots = findViewById(R.id.selectTimeSlots);
-
-        // set time slots adapter
-        List<String> timeslots = new ArrayList<>();
-        Map<String, Integer> map = event.getEvtTimeSlots();
-        for (Map.Entry<String,Integer> entry : map.entrySet()) {
-            timeslots.add(entry.getKey());
-        }
-
-        timeslotsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, timeslots);
-        selectTimeSlots.setAdapter(timeslotsAdapter);
-
-
-        selectTimeSlots.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(!selectedTimeSlots.contains(timeslots.get(position))) {
-                    selectedTimeSlots.add(timeslots.get(position));
+            if(!extras.getBoolean("isTest")) {
+                // set time slots adapter
+                selectedTimeSlots = new ArrayList<>();
+                selectTimeSlots = findViewById(R.id.selectTimeSlots);
+                List<String> timeslots = new ArrayList<>();
+                Map<String, Integer> map = event.getEvtTimeSlots();
+                for (Map.Entry<String,Integer> entry : map.entrySet()) {
+                    timeslots.add(entry.getKey());
                 }
-                else {
-                    selectedTimeSlots.remove(timeslots.get(position));
-                }
+
+                timeslotsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, timeslots);
+                selectTimeSlots.setAdapter(timeslotsAdapter);
+
+                selectTimeSlots.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if(!selectedTimeSlots.contains(timeslots.get(position))) {
+                            selectedTimeSlots.add(timeslots.get(position));
+                        }
+                        else {
+                            selectedTimeSlots.remove(timeslots.get(position));
+                        }
+                    }
+                });
+
+                popSignUp = findViewById(R.id.popSignUp);
+                popEvtName = findViewById(R.id.popEvtName);
+
+                setEventInfo();
+
+                popSignUp.setOnClickListener(this::signUpOnClick);
             }
-        });
+        }
 
         db = new DatabaseHelper(this);
-
-        setEventInfo();
-
-        popSignUp.setOnClickListener(this::signUpOnClick);
 
     }
 
@@ -104,17 +104,22 @@ public class SignUpPop extends AppCompatActivity {
                 map.put(s, map.get(s) + 1);
             }
         }
-        boolean result = db.signUpEvent(event.getEvtId(), userId, map);
-        // sign up successfully
-        if(result) {
+
+        boolean res = signUpEvent(event.getEvtId(), userId, map);
+        if(res) {
             Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
             switchActivity("Home");
         }
-        // sign up failed
         else {
             Toast.makeText(this, "This Event Does Not Exist!", Toast.LENGTH_SHORT).show();
             switchActivity("Home");
         }
+    }
+
+    public boolean signUpEvent(int evtId, int userId, Map<String, Integer> map) {
+
+        boolean result = db.signUpEvent(evtId, userId, map);
+        return result;
     }
 
     /**

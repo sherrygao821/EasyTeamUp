@@ -115,6 +115,7 @@ public class EventDetail extends AppCompatActivity {
 
         String eventString = new Gson().toJson(event);
         intent.putExtra("eventInfo", eventString);
+        intent.putExtra("isTest", false);
 
         startActivity(intent);
     }
