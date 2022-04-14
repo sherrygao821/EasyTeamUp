@@ -49,7 +49,7 @@ public class ChangeProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_profile);
 
-        changeProfile = findViewById(R.id.change_profile);
+        changeProfile = findViewById(R.id.bt_update_profile);
 
         etFirstName = findViewById(R.id.et_first_name);
         etLastName = findViewById(R.id.et_last_name);
@@ -111,12 +111,12 @@ public class ChangeProfile extends AppCompatActivity {
             String email = etEmail.getText().toString();
             String contactNo = etContactNo.getText().toString();
 
-            Toast.makeText(this,"Profile Update Successfully",Toast.LENGTH_SHORT).show();
             // call API now
             ((MyApplication) this.getApplication()).getUser().setFirstName(firstName);
             ((MyApplication) this.getApplication()).getUser().setLastName(lastName);
             ((MyApplication) this.getApplication()).getUser().setEmail(email);
 
+            Toast.makeText(this,"Profile Update Successfully",Toast.LENGTH_SHORT).show();
             changeProfile.setOnClickListener(this::closeOnClick);
         }
     }
@@ -141,6 +141,7 @@ public class ChangeProfile extends AppCompatActivity {
 //
         Toast.makeText(this,"Avatar Updated!",Toast.LENGTH_SHORT).show();
         ((MyApplication) this.getApplication()).getUser().setPhoto(avatarIdx);
+        changeProfile.setOnClickListener(this::closeOnClick);
     }
 
     public void closeOnClick(View v) {

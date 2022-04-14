@@ -207,7 +207,7 @@ tools:context=".ChangeProfile">
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/bt_register"
+            android:id="@+id/bt_update_profile"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="50dp"
