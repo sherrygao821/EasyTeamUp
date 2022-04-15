@@ -61,7 +61,7 @@ public class Notification {
     }
 
     public int getNotiID() {
-        return notiID;
+        return this.notiID;
     }
 
     public void setNotiID(int notiID) {

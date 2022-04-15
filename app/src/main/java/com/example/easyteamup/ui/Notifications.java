@@ -84,6 +84,8 @@ public class Notifications extends Fragment {
         ListView invListView = rootView.findViewById(R.id.invlistview);
         invListView.setAdapter(new InviteAdapter(getContext(),R.layout.item_noti_inv,invList));
 
+
+
         return rootView;
     }
 

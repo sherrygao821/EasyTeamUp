@@ -115,16 +115,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean checkUser(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-
 //        db.execSQL("DROP TABLE IF EXISTS " + EVENT_TABLE);
 //        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
-        //db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_TABLE);
+//        db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_TABLE);
 //        String createUserTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PWD + " TEXT, " + COLUMN_STUDENT + " INT)";
 //        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, " + COLUMN_EVT_DURATION + " TEXT, " + COLUMN_EVT_TYPE + " INT, " + COLUMN_EVT_DESCRIPTION + " TEXT, " + COLUMN_EVT_PUBLIC + " BOOLEAN, " + COLUMN_EVT_DETERMINED_TIME + " TEXT )";
-        //String createNotiTableStatement = "CREATE TABLE " + NOTIFICATION_TABLE + " (" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_ID + " INT, " + COLUMN_FROM_ID + " INT, " + COLUMN_TO_ID + " INT, " + COLUMN_NOTIFICATION_TYPE + " INT)";
+//        String createNotiTableStatement = "CREATE TABLE " + NOTIFICATION_TABLE + " (" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_ID + " INT, " + COLUMN_FROM_ID + " INT, " + COLUMN_TO_ID + " INT, " + COLUMN_NOTIFICATION_TYPE + " INT)";
 //        db.execSQL(createEventTableStatement);
 //        db.execSQL(createUserTableStatement);
-        //db.execSQL(createNotiTableStatement);
+//        db.execSQL(createNotiTableStatement);
 
         Cursor cursor = db.rawQuery("SELECT ID FROM USER_TABLE WHERE EMAIL = ?", new String[] {username});
         if(cursor.getCount() > 0)
@@ -261,8 +260,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor != null) {
             cursor.moveToFirst();
             //TODO: TESTING change user name needs to be implemented
-            //CORRECT VERSION: ans = cursor.getString(1);
-            ans = "Zhaoxu";
+            //CORRECT VERSION:
+            ans = cursor.getString(1);
+            //ans = "Zhaoxu";
         }
         cursor.close();
         db.close();
@@ -313,12 +313,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public String getEvtNamebyID(int eventId){
         String ans = "cursor is null";
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_NAME = ?", new String[]{String.valueOf(eventId)});
-        if (cursor != null) {
-            cursor.moveToFirst();
+        Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE WHERE EVT_ID = ?", new String[]{String.valueOf(eventId)});
+        if (cursor.moveToFirst()) {
             //TODO: TESTING
-            //ans = cursor.getString(1);
-            ans = "New Event";
+            ans = cursor.getString(cursor.getColumnIndexOrThrow("EVT_NAME"));
+            //ans = "New Event";
         }
         cursor.close();
         db.close();
@@ -430,7 +429,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             // send notification to event host
             int evtHostId = cursor.getInt(cursor.getColumnIndexOrThrow("HOST_ID"));
-            Notification invite = new Notification(evtId, userId, evtHostId, 0);
+            Notification invite = new Notification(evtId, userId, evtHostId, 1);
             addNoti(invite);
 
             return true;
@@ -451,7 +450,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this .getWritableDatabase();
         ContentValues cv = new ContentValues();
-
         cv.put(COLUMN_EVT_ID, noti.getEventID());
         cv.put(COLUMN_FROM_ID, noti.getFrom());
         cv.put(COLUMN_TO_ID, noti.getTo());
@@ -484,7 +482,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 int tempID = cursor.getInt(3);
+                int type = cursor.getInt(4);
                 if (tempID != ID) continue;
+                if (type == 2) continue;
                 Notification temp = new Notification(cursor.getInt(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4));
                 notiList.add(temp);
             } while(cursor.moveToNext());
@@ -622,7 +622,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.update(EVENT_TABLE, cv, "EVT_ID" + "= ?", new String[] {String.valueOf(evtId)});
 
                 int evtHostId = cursor.getInt(cursor.getColumnIndexOrThrow("HOST_ID"));
-                Notification invite = new Notification(evtId, userId, evtHostId, 1);
+                Notification invite = new Notification(evtId, userId, evtHostId, 0);
                 addNoti(invite);
             }
             return true;
@@ -631,9 +631,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
     }
 
-    public void deleteNoti(int notiId){
+    public void deleteNoti(int fromId, int toId, int type){
+        Log.d("dbdelete " +fromId+toId+type, "deleting noti from db");
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM "+NOTIFICATION_TABLE+" WHERE NOTI_ID = "+String.valueOf(notiId));
+        //db.execSQL("DELETE FROM "+NOTIFICATION_TABLE+" WHERE NOTI_ID = "+String.valueOf(notiId));
+        db.execSQL("DELETE FROM "+NOTIFICATION_TABLE+" WHERE FROM_ID = "+String.valueOf(fromId) + " AND TO_ID = " + String.valueOf(toId) + " AND TYPE = "+String.valueOf(type));
     }
 
     //get notification

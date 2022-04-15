@@ -56,14 +56,14 @@ public class NotiAdapter extends ArrayAdapter<Notification> {
             TextView fromUser = (TextView) v.findViewById(R.id.notiFromUser);
             TextView description = (TextView) v.findViewById(R.id.notiDescription);
             TextView notiEvtName = (TextView) v.findViewById(R.id.notiEventName);
-
+            Log.d("noti", String.valueOf(n.getFrom()));
             if (n.getType() != 2){
                 if (fromUser != null){
                     if (n.getType() == 3){
                          fromUser.setText(R.string.timeTerminated);
                     } else {
-                        Log.d("noti", String.valueOf(n.getFrom()));
-                         fromUser.setText(db.getUserNameById(n.getFrom()));
+                         fromUser.setText(db.getUserEmail(n.getFrom()));
+                         notiEvtName.setText(db.getEvtNamebyID(n.getEventID()));
                     }
                 }
 

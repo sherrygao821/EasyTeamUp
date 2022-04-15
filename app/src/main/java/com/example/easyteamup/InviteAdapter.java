@@ -73,7 +73,7 @@ public class InviteAdapter extends ArrayAdapter<Notification> {
             if (n.getType() == 2){
 
                 if (fromUser != null){
-                    fromUser.setText(db.getUserNameById(n.getFrom()));
+                    fromUser.setText(db.getUserEmail(n.getFrom()));
                 }
 
                 if (description != null) {
@@ -107,7 +107,8 @@ public class InviteAdapter extends ArrayAdapter<Notification> {
                 boolean result = db.signUpEvent(n.getEventID(),userId,new HashMap<String,Integer>());
                 if (result) {
                     //remove this notification
-                    //db.deleteNoti(n.getNotiID());
+                    db.deleteNoti(n.getFrom(),n.getTo(),n.getType());
+                    Log.d("drop", "inv dropped");
                     makeText(context, "Invitation accepted", LENGTH_SHORT).show();
                 } else {
                     makeText(context, "Failed to accept invitation, Please try again", LENGTH_SHORT).show();
@@ -120,7 +121,10 @@ public class InviteAdapter extends ArrayAdapter<Notification> {
         buttonDecline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //db.deleteNoti(n.getNotiID());
+                //Notification reject = new Notification(n.getEventID(), n.getTo(), n.getFrom(), 0);
+                //addNoti(invite);
+                db.deleteNoti(n.getFrom(),n.getTo(),n.getType());
+                Log.d("drop", "inv dropped");
                 makeText(context, "Invitation declined", LENGTH_SHORT).show();
             }
         });
