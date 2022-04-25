@@ -76,6 +76,7 @@ public class Notifications extends Fragment {
 
         //CORRECT VERSION:
         notiList = db.getNotification((((MyApplication) this.getActivity().getApplication()).getUser()));
+        ((MyApplication) this.getActivity().getApplication()).getUser().setReadNoti(notiList.size());
         invList = db.getInvitations((((MyApplication) this.getActivity().getApplication()).getUser()));
 
 
@@ -84,7 +85,9 @@ public class Notifications extends Fragment {
         ListView invListView = rootView.findViewById(R.id.invlistview);
         invListView.setAdapter(new InviteAdapter(getContext(),R.layout.item_noti_inv,invList));
 
-
+        //noti count db
+        int myUserID = ((MyApplication) this.getActivity().getApplication()).getUser().getUserId();
+        db.updateNotificationCount(myUserID,notiList.size(),invList.size());
 
         return rootView;
     }

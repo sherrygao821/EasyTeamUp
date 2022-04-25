@@ -1,11 +1,14 @@
 package com.example.easyteamup.ui;
 
+import static android.widget.Toast.makeText;
+
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +23,11 @@ import com.example.easyteamup.CreateEvent;
 import com.example.easyteamup.DatabaseHelper;
 import com.example.easyteamup.EventAdapter;
 import com.example.easyteamup.EventDetail;
+import com.example.easyteamup.MyApplication;
 import com.example.easyteamup.R;
 import com.example.easyteamup.classes.*;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.*;
@@ -50,11 +56,12 @@ public class Events extends Fragment {
 
     /**
      * Set Adapter for the home page list view
+     * Get new Notification stats
      * @param inflater
      * @param container
      * @param savedInstanceState
      * @return rootView
-     * @author Sherry Gao
+     * @author Sherry Gao & Andy Chen
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,9 +93,15 @@ public class Events extends Fragment {
         addEventButton = rootView.findViewById(R.id.addEventButton);
         addEventButton.setOnClickListener(this::onClick);
 
-        eventsSwitchMap = rootView.findViewById(R.id.eventsSwitchMap);
-        eventsSwitchMap.setOnClickListener(this::switchMap);
-
+        //New Notification stats
+        User temp = (((MyApplication) this.getActivity().getApplication()).getUser());
+        if (temp.isJustLoggedIn()){
+            int oldNotiCnt = temp.getReadNoti();
+            Pair<Integer, Integer> newNoti = db.getNewNoti(temp.getUserId());
+            Log.d("debug", "calling toast!");
+            Snackbar.make(rootView.findViewById(R.id.snackbar), String.format(getString(R.string.newNotiString), newNoti.first, newNoti.second), Snackbar.LENGTH_LONG).show();
+            temp.setJustLoggedIn(false);
+        }
         return rootView;
     }
 
@@ -124,7 +137,7 @@ public class Events extends Fragment {
         allEvents = db.getAllActivePublicEvents();
 
         if(allEvents.size() == 0)
-            Toast.makeText(getActivity(), "No Available Events! Please Check Back Later or Create One!", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), "No Available Events! Please Check Back Later or Create One!", Toast.LENGTH_SHORT).show();
 
         for(Event e : allEvents) {
             int userId = e.getHostId();

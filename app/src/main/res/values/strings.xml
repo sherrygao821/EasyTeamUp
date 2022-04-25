@@ -67,4 +67,6 @@
     <string name="invitetoevent">Invited You to Join Event</string>
     <string name="switchToMap">Map View</string>
     <string name="switchToList">List View</string>
+    <string name="newNotiString">Welcome back!\nYou have %d new Notifications and %d new Invitations!</string>
+
 </resources>
