@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,8 +30,11 @@ public class Events extends Fragment {
 
     ListView eventsListView;
     ImageView addEventButton;
+    Button eventsSwitchMap;
 
     DatabaseHelper db;
+
+    int currFrag = 0;
 
     private List<Event> allEvents;
 
@@ -82,7 +86,23 @@ public class Events extends Fragment {
         addEventButton = rootView.findViewById(R.id.addEventButton);
         addEventButton.setOnClickListener(this::onClick);
 
+        eventsSwitchMap = rootView.findViewById(R.id.eventsSwitchMap);
+        eventsSwitchMap.setOnClickListener(this::switchMap);
+
         return rootView;
+    }
+
+    private void switchMap(View v) {
+        if (currFrag == 0) {
+            currFrag = 1;
+            eventsSwitchMap.setText(R.string.switchToList);
+            getFragmentManager().beginTransaction().replace(R.id.eventsMainContent, new MapsFragment()).addToBackStack(null).commit();
+        }
+        else {
+            currFrag = 0;
+            eventsSwitchMap.setText(R.string.switchToMap);
+            getFragmentManager().beginTransaction().replace(R.id.eventsMainContent, new Events()).addToBackStack(null).commit();
+        }
     }
 
     /**

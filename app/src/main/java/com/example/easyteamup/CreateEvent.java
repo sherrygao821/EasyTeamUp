@@ -6,6 +6,8 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.easyteamup.classes.Event;
 import com.example.easyteamup.classes.Time;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -43,6 +46,8 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
     ArrayAdapter<String> timeslotsAdapter;
 
     DatabaseHelper db;
+
+    Geocoder gc;
 
     private Context context;
 
@@ -81,6 +86,8 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         context = this;
         timeslotsString = new ArrayList<>();
         db = new DatabaseHelper(this);
+
+        gc = new Geocoder(this);
 
         // get info passed
         Bundle extras = getIntent().getExtras();
@@ -179,7 +186,31 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         // collect all event construction params
         hostId = ((MyApplication) this.getApplication()).getUser().getUserId();
         evtDescript = newEvtDescript.getText().toString();
+
+        // get geocoded location
         location = evtLocation.getText().toString();
+        Log.d("DEBUG", location);
+        Address loc;
+
+        List<Address> addressList = null;
+
+        if(gc.isPresent()) {
+            try {
+                addressList = gc.getFromLocationName(location, 5);
+                if (addressList == null) {
+                    Toast.makeText(this, "Please Enter A Valid Address", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                loc = addressList.get(0);
+                String loc_string = new Gson().toJson(loc);
+                Log.d("DEBUG", loc_string);
+            }
+            catch(Exception ex) {
+                ex.printStackTrace();
+            }
+
+        }
+
         evtName = newEvtName.getText().toString();
         String evtDuration = evtDurationHours.getText().toString();
 

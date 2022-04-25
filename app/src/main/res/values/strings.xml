@@ -65,5 +65,6 @@
     <string name="foryourevent">For Your Event</string>
     <string name="determineTime">Determine Event Time</string>
     <string name="invitetoevent">Invited You to Join Event</string>
-
+    <string name="switchToMap">Map View</string>
+    <string name="switchToList">List View</string>
 </resources>
