@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.Nullable;
 
@@ -33,6 +34,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STUDENT = "STUDENT";
     public static final String COLUMN_EMAIL = "EMAIL";
     public static final String COLUMN_PWD = "PWD";
+    public static final String COLUMN_NOTICNT = "NOTI";
+    public static final String COLUMN_INVCNT = "INV";
 
     //Event Table static constants
     public static final String EVENT_TABLE = "EVENT_TABLE";
@@ -66,7 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //creating new DB
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createUserTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PWD + " TEXT, " + COLUMN_STUDENT + " INT)";
+        String createUserTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PWD + " TEXT, " + COLUMN_STUDENT + " INT, " + COLUMN_NOTICNT + " INT, " + COLUMN_INVCNT + " INT)";
         String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, " + COLUMN_EVT_DURATION + " TEXT, " + COLUMN_EVT_TYPE + " INT, " + COLUMN_EVT_DESCRIPTION + " TEXT, " + COLUMN_EVT_PUBLIC + " BOOLEAN, " + COLUMN_EVT_DETERMINED_TIME + " TEXT )";
         String createNotiTableStatement = "CREATE TABLE " + NOTIFICATION_TABLE + " (" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_ID + " INT, " + COLUMN_FROM_ID + " INT, " + COLUMN_TO_ID + " INT, " + COLUMN_NOTIFICATION_TYPE + " INT)";
         db.execSQL(createEventTableStatement);
@@ -110,7 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Check whether the user email is already in database
      * @param username
      * @return
-     * @author Sherry Gao
+     * @author Sherry Gao / Andy
      */
     public boolean checkUser(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -118,7 +121,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //        db.execSQL("DROP TABLE IF EXISTS " + EVENT_TABLE);
 //        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
 //        db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_TABLE);
-//        String createUserTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PWD + " TEXT, " + COLUMN_STUDENT + " INT)";
+//        String createUserTableStatement = "CREATE TABLE " + USER_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " + COLUMN_AGE + " INT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PWD + " TEXT, " + COLUMN_STUDENT + " INT, " + COLUMN_NOTICNT + " INT, " + COLUMN_INVCNT + " INT)";
 //        String createEventTableStatement = "CREATE TABLE " + EVENT_TABLE + " (" + COLUMN_EVT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_NAME + " TEXT, " + COLUMN_HOST_ID + " INT, " + COLUMN_TIME + " TEXT, "  + COLUMN_LOCATION + " TEXT, " + COLUMN_TIMESLOTS + " TEXT, " + COLUMN_PARTICIPANTS + " TEXT, " + COLUMN_EVT_DURATION + " TEXT, " + COLUMN_EVT_TYPE + " INT, " + COLUMN_EVT_DESCRIPTION + " TEXT, " + COLUMN_EVT_PUBLIC + " BOOLEAN, " + COLUMN_EVT_DETERMINED_TIME + " TEXT )";
 //        String createNotiTableStatement = "CREATE TABLE " + NOTIFICATION_TABLE + " (" + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EVT_ID + " INT, " + COLUMN_FROM_ID + " INT, " + COLUMN_TO_ID + " INT, " + COLUMN_NOTIFICATION_TYPE + " INT)";
 //        db.execSQL(createEventTableStatement);
@@ -630,7 +633,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         else
             return false;
     }
-
+    /**
+     * Delete notification
+     * @param fromId
+     * @param toId
+     * @param type
+     * @author Andy
+     */
     public void deleteNoti(int fromId, int toId, int type){
         Log.d("dbdelete " +fromId+toId+type, "deleting noti from db");
         SQLiteDatabase db = this.getWritableDatabase();
@@ -638,8 +647,54 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM "+NOTIFICATION_TABLE+" WHERE FROM_ID = "+String.valueOf(fromId) + " AND TO_ID = " + String.valueOf(toId) + " AND TYPE = "+String.valueOf(type));
     }
 
+    /**
+     *
+     * @param receiverID
+     * @return
+     * @author Andy
+     */
+    public Pair<Integer, Integer> getNewNoti(int receiverID){
+        Log.d("debug","checking new notificaiotn since last login for "+receiverID);
+        int inv = 0, noti = 0;
+        int oldInv = 0, oldNoti = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String queryString = "SELECT * FROM " + NOTIFICATION_TABLE;
+        Cursor cursor = db.rawQuery(queryString, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int tempID = cursor.getInt(3);
+                int tempNotiId = cursor.getInt(4);
+                if (tempID != receiverID) continue;
+                if (tempNotiId == 2) inv++;
+                else noti++;
+            } while (cursor.moveToNext());
+        }
+        Cursor cursor2 = db.rawQuery("SELECT * FROM "+USER_TABLE+" WHERE ID = ?",new String[]{String.valueOf(receiverID)});
+        if (cursor2.moveToFirst()) {
+            oldNoti = cursor2.getInt(cursor2.getColumnIndexOrThrow(COLUMN_NOTICNT));
+            oldInv = cursor2.getInt(cursor2.getColumnIndexOrThrow(COLUMN_INVCNT));
+        }
+        cursor2.close();
+        cursor.close();
+        db.close();
+        return Pair.create(noti-oldNoti,inv-oldInv);
+    }
     //get notification
     //public int getNotiId()
 
-
+    /**
+     *
+     * @param userID
+     * @param notiCnt
+     * @param invCnt
+     * @return
+     * @author Andy
+     */
+    public boolean updateNotificationCount(int userID, int notiCnt, int invCnt){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_NOTICNT,notiCnt);
+        cv.put(COLUMN_INVCNT, invCnt);
+        return db.update(USER_TABLE, cv, "ID = ?", new String[]{String.valueOf(userID)}) == 1;
+    }
 }

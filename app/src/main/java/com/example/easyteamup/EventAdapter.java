@@ -7,6 +7,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.content.Context;
+import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +26,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
         super(context, resource, events);
         this.resourceLayout = resource;
         this.context = context;
+        Toast.makeText(context,"You have notifications!",Toast.LENGTH_SHORT);
     }
 
     @NonNull

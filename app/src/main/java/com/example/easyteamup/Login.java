@@ -49,10 +49,14 @@ public class Login extends AppCompatActivity {
         else {
             int res = checkLogin(enteredEmail, enteredPass);
 
+
             // log in succeed
             if(res == 0) {
                 saveUserInfo(enteredEmail, enteredPass);
                 Log.d("LOGIN", "Log in succeeded");
+
+                int userId = db.getUserIdByEmail(enteredEmail);
+
                 switchActivity();
             }
             // log in fail
@@ -106,9 +110,10 @@ public class Login extends AppCompatActivity {
 
     /**
      * Retrieve and save user info to global variable
+     * If user log in instead of sign up, set justLogin to True;
      * @param enteredEmail
      * @param enteredPass
-     * @author Sherry Gao
+     * @author Sherry Gao & Andy
      */
     public void saveUserInfo(String enteredEmail, String enteredPass) {
 
@@ -125,6 +130,7 @@ public class Login extends AppCompatActivity {
             user.setUserId(cursor.getInt(0));
             user.setEmail(enteredEmail);
             user.setUserPwd(enteredPass);
+            user.setJustLoggedIn(true);
             ((MyApplication) this.getApplication()).setUser(user);
         }
     }

@@ -14,6 +14,12 @@
         android:dividerHeight="0dp">
     </ListView>
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:id="@+id/snackbar"/>
+
     <ImageView
         android:id="@+id/addEventButton"
         android:layout_width="67dp"

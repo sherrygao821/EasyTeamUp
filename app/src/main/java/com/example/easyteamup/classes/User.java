@@ -18,6 +18,8 @@ public class User {
     private String userPwd;
     private String firstName;
     private String lastName;
+    private int readNoti;
+    private boolean justLoggedIn;
 
     public User() {}
 
@@ -26,6 +28,8 @@ public class User {
         this.userPwd = userPwd;
         this.firstName = "firstName";
         this.lastName = "lastName";
+        this.readNoti = 0;
+        this.justLoggedIn = false;
     }
 
     public User(int age, boolean isStudent, String Email, String userPwd, String firstName, String lastName) {
@@ -115,5 +119,21 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public int getReadNoti() {
+        return readNoti;
+    }
+
+    public void setReadNoti(int readNoti) {
+        this.readNoti = readNoti;
+    }
+
+    public boolean isJustLoggedIn() {
+        return justLoggedIn;
+    }
+
+    public void setJustLoggedIn(boolean justLoggedIn) {
+        this.justLoggedIn = justLoggedIn;
     }
 }
