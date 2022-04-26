@@ -34,11 +34,12 @@ import java.util.Map;
 
 public class MapsFragment extends Fragment {
 
-    Geocoder gc;
     DatabaseHelper db;
     GoogleMap gm;
 
     List<Event> events;
+
+    private static final int DEFAULT_ZOOM = 15;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -57,15 +58,21 @@ public class MapsFragment extends Fragment {
             db = new DatabaseHelper(getActivity());
             events = db.getAllActivePublicEvents();
 
+            LatLng loc_latLong = null;
+
             for(Event e : events)
             {
                 String loc_string = e.getEvtLocation();
                 Location loc = new Gson().fromJson(loc_string, Location.class);
 
-                LatLng loc_latLong = new LatLng(loc.getLatitude(), loc.getLongitude());
+                loc_latLong = new LatLng(loc.getLatitude(), loc.getLongitude());
                 Marker marker = googleMap.addMarker(new MarkerOptions().position(loc_latLong).title(e.getEvtName()));
                 marker.setTag(e);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(loc_latLong));
+            }
+
+            if(loc_latLong != null)
+            {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc_latLong, DEFAULT_ZOOM));
             }
 
             gm.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -91,7 +98,6 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        gc = new Geocoder(getActivity());
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -104,6 +110,4 @@ public class MapsFragment extends Fragment {
             mapFragment.getMapAsync(callback);
         }
     }
-
-
 }
