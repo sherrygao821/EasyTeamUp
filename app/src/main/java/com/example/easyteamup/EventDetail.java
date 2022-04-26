@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.easyteamup.classes.Event;
+import com.example.easyteamup.classes.Location;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -143,7 +144,10 @@ public class EventDetail extends AppCompatActivity {
         String[] resources = this.getResources().getStringArray(R.array.evtTypes);
         evtDetailType.setText(String.valueOf(resources[event.getEvtType()]));
         evtDetailDescript.setText(event.getEvtDescription());
-        evtDetailLoc.setText(event.getEvtLocation());
+
+        Location loc = new Gson().fromJson(event.getEvtLocation(), Location.class);
+
+        evtDetailLoc.setText(loc.getAddress());
         evtDetailNoP.setText(String.valueOf(event.getEvtParticipants().size()));
         evtDetailEmail.setText(String.valueOf(event.getHostEmail()));
         evtDetailDuration.setText(String.valueOf(event.getEvtDuration()));

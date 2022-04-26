@@ -24,10 +24,12 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.easyteamup.classes.Event;
+import com.example.easyteamup.classes.Location;
 import com.example.easyteamup.classes.Time;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -156,7 +158,11 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         newEvtName.setText(currEvt.getEvtName());
         newEvtDescript.setText(currEvt.getEvtDescription());
         evtDurationHours.setText(currEvt.getEvtDuration());
-        evtLocation.setText(currEvt.getEvtLocation());
+
+        String loc_string = currEvt.getEvtLocation();
+        Location curr_loc = new Gson().fromJson(loc_string, Location.class);
+        evtLocation.setText(curr_loc.getAddress());
+
         evtDueDatePicker.setText(currEvt.getEvtSignUpDueDate());
 
         evtDueTimeString = currEvt.getEvtSignUpDueDate();
@@ -171,6 +177,27 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         if(evtDueTimeString.equals("")) return false;
 
         return true;
+    }
+
+    public double[] getLocationFromAddress(String strAddress) {
+
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+
+        try {
+            address = coder.getFromLocationName(strAddress, 1);
+            if (address == null || address.size() == 0) {
+                return null;
+            }
+            Address location = address.get(0);
+            double[] locationInfo = new double[2];
+            locationInfo[0] = location.getLatitude();
+            locationInfo[1] = location.getLongitude();
+
+            return locationInfo;
+        } catch (IOException e) {
+           return null;
+        }
     }
 
     /**
@@ -189,27 +216,17 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
 
         // get geocoded location
         location = evtLocation.getText().toString();
-        Log.d("DEBUG", location);
-        Address loc;
 
-        List<Address> addressList = null;
+        double[] locationInfo = getLocationFromAddress(location);
 
-        if(gc.isPresent()) {
-            try {
-                addressList = gc.getFromLocationName(location, 5);
-                if (addressList == null) {
-                    Toast.makeText(this, "Please Enter A Valid Address", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                loc = addressList.get(0);
-                String loc_string = new Gson().toJson(loc);
-                Log.d("DEBUG", loc_string);
-            }
-            catch(Exception ex) {
-                ex.printStackTrace();
-            }
-
+        if(locationInfo == null) {
+            Toast.makeText(this, "Please enter a valid address!", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        Location loc = new Location(locationInfo[0], locationInfo[1], location);
+
+        String loc_string = new Gson().toJson(loc);
 
         evtName = newEvtName.getText().toString();
         String evtDuration = evtDurationHours.getText().toString();
@@ -243,7 +260,7 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
             currEvt.setEvtName(evtName);
             currEvt.setEvtDescription(evtDescript);
             currEvt.setEvtDuration(evtDuration);
-            currEvt.setEvtLocation(location);
+            currEvt.setEvtLocation(loc_string);
             currEvt.setPublic(isPublic);
             currEvt.setEvtSignUpDueDate(evtDueTimeString);
             currEvt.setEvtTimeSlots(timeSlotsMap);
@@ -256,7 +273,7 @@ public class CreateEvent extends AppCompatActivity implements AdapterView.OnItem
         }
         else {
             Event event;
-            event = new Event(evtName, hostId, evtDescript, evtDueTimeString, location, timeSlotsMap, participants, evtType, true, isPublic, evtDuration);
+            event = new Event(evtName, hostId, evtDescript, evtDueTimeString, loc_string, timeSlotsMap, participants, evtType, true, isPublic, evtDuration);
 
 //            if (db.addEvent(event, inviteesList, isEdit) != -1)
 //                finished = true;

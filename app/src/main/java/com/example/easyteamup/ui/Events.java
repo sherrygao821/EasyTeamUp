@@ -92,6 +92,8 @@ public class Events extends Fragment {
 
         addEventButton = rootView.findViewById(R.id.addEventButton);
         addEventButton.setOnClickListener(this::onClick);
+        eventsSwitchMap = rootView.findViewById(R.id.eventsSwitchMap);
+        eventsSwitchMap.setOnClickListener(this::switchMap);
 
         //New Notification stats
         User temp = (((MyApplication) this.getActivity().getApplication()).getUser());

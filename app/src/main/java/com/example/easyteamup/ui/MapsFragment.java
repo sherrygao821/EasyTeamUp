@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,17 +14,25 @@ import android.view.ViewGroup;
 
 import com.example.easyteamup.DatabaseHelper;
 import com.example.easyteamup.R;
+import com.example.easyteamup.classes.Event;
+import com.example.easyteamup.classes.Location;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.util.List;
 
 public class MapsFragment extends Fragment {
 
     Geocoder gc;
     DatabaseHelper db;
+
+    List<Event> events;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -38,13 +47,20 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
+            db = new DatabaseHelper(getActivity());
+            events = db.getAllActivePublicEvents();
 
-//            db.getAllActivePublicEvents();
+            for(Event e : events)
+            {
+                String loc_string = e.getEvtLocation();
+                Location loc = new Gson().fromJson(loc_string, Location.class);
 
-            LatLng sydney = new LatLng(39, 116);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                LatLng loc_latLong = new LatLng(loc.getLatitude(), loc.getLongitude());
 
+                googleMap.addMarker(new MarkerOptions().position(loc_latLong).title(loc.getAddress()));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(loc_latLong));
+
+            }
         }
     };
 
