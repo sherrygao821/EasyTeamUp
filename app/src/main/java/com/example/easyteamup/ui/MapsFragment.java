@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.easyteamup.DatabaseHelper;
+import com.example.easyteamup.EventDetail;
 import com.example.easyteamup.R;
 import com.example.easyteamup.classes.Event;
 import com.example.easyteamup.classes.Location;
@@ -21,16 +23,20 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapsFragment extends Fragment {
 
     Geocoder gc;
     DatabaseHelper db;
+    GoogleMap gm;
 
     List<Event> events;
 
@@ -47,6 +53,7 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
+            gm = googleMap;
             db = new DatabaseHelper(getActivity());
             events = db.getAllActivePublicEvents();
 
@@ -56,11 +63,26 @@ public class MapsFragment extends Fragment {
                 Location loc = new Gson().fromJson(loc_string, Location.class);
 
                 LatLng loc_latLong = new LatLng(loc.getLatitude(), loc.getLongitude());
-
-                googleMap.addMarker(new MarkerOptions().position(loc_latLong).title(loc.getAddress()));
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(loc_latLong).title(e.getEvtName()));
+                marker.setTag(e);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(loc_latLong));
-
             }
+
+            gm.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+
+                    Event e = (Event)marker.getTag();
+                    String hostEmail = db.getUserEmail(e.getHostId());
+                    e.setHostEmail(hostEmail);
+                    String e_string = new Gson().toJson(e);
+
+                    Intent intent = new Intent(getActivity(), EventDetail.class);
+                    intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intent.putExtra("eventInfo", e_string);
+                    startActivity(intent);
+                }
+            });
         }
     };
 
@@ -82,4 +104,6 @@ public class MapsFragment extends Fragment {
             mapFragment.getMapAsync(callback);
         }
     }
+
+
 }
