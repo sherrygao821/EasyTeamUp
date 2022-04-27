@@ -1,5 +1,8 @@
 package com.example.easyteamup.ui;
 
+import static android.widget.Toast.makeText;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,50 +12,86 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.easyteamup.DatabaseHelper;
+import com.example.easyteamup.EventAdapter;
+import com.example.easyteamup.EventDetail;
 import com.example.easyteamup.EventListAdapter;
 import com.example.easyteamup.EventModel;
 import com.example.easyteamup.R;
+import com.example.easyteamup.classes.Event;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * My event fragment of the profile page
  * @author Lucy Shi
  */
-public class MyEventFragment extends Events {
+public class MyEventFragment extends Fragment {
 
-    RecyclerView recyclerView;
-    ArrayList<EventModel> list;
+    ListView eventsListView;
+    DatabaseHelper db;
+    private List<Event> allEvents;
 
     public MyEventFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.allEvents = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-//        View view = inflater.inflate(R.layout.fragment_my_event, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_my_event, container, false);
+        db = new DatabaseHelper(getActivity());
 
-//        recyclerView = view.findViewById(R.id.myEventRV);
-//        list = new ArrayList<>();
-//        list.add(new EventModel(R.drawable.profile, "Beach", "TBD", "sports", "Gaga"));
-//        list.add(new EventModel(R.drawable.profile, "Beach", "TBD", "sports", "Gaga"));
-//
-//        EventListAdapter adapter = new EventListAdapter(list, getContext());
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-//        recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.setAdapter(adapter);
+        // Add adapter to the home page list view
+        eventsListView = rootView.findViewById(R.id.eventsListView);
+        eventsListView.addHeaderView(new View(getActivity()));
+        eventsListView.addFooterView(new View(getActivity()));
+        getEventList();
+        eventsListView.setAdapter(new EventAdapter(getActivity(), R.layout.item_event, allEvents));
 
-//        return view;
-        return super.onCreateView(inflater, container, savedInstanceState);
+        eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                // initiate Event Detail Page w Event Data
+                Intent intent = new Intent(getActivity(), EventDetail.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                String eventInfo = new Gson().toJson(allEvents.get(position - 1));
+                intent.putExtra("eventInfo", eventInfo);
+                intent.putExtra("isTest", false);
+                startActivity(intent);
+            }
+        });
+
+        return rootView;
+    }
+
+    /**
+     * Get the list of my events from the database
+     * @author Lucy Shi
+     */
+    private void getEventList() {
+        allEvents = db.getAllActivePublicEvents();
+
+        if(allEvents.size() == 0)
+            makeText(getActivity(), "No Available Events! Please Check Back Later or Create One!", Toast.LENGTH_SHORT).show();
+
+        for(Event e : allEvents) {
+            int userId = e.getHostId();
+            String hostEmail = db.getUserEmail(userId);
+            e.setHostEmail(hostEmail);
+        }
     }
 }
