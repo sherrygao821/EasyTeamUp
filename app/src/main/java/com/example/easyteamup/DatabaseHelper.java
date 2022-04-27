@@ -404,6 +404,106 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * get all my events for the profile page
+     * @return
+     * @author Lucy Shi
+     */
+    public List<Event> getAllMyEvents(int myId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        List<Event> allEvents = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE",null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+
+                // check whether or not to add the evnt to the list
+                int evtHostId = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow("HOST_ID")));
+                if(evtHostId != myId) {
+                    cursor.moveToNext();
+                    continue;
+                }
+
+                String time = cursor.getString(cursor.getColumnIndexOrThrow("TIME"));
+                int evtId = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow("EVT_ID")));
+                String evtName = cursor.getString(cursor.getColumnIndexOrThrow("EVT_NAME"));
+                int hostId = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow("HOST_ID")));
+                String location = cursor.getString(cursor.getColumnIndexOrThrow("LOCATION"));
+                int type = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow("TYPE")));
+
+                Map<String, Integer> timeslots = new HashMap<>();
+                Type classType = new TypeToken<Map<String, Integer>>() {}.getType();
+                timeslots = new Gson().fromJson(cursor.getString(cursor.getColumnIndexOrThrow("TIMESLOTS")), classType);
+
+                List<Integer> participants = new ArrayList<>();
+                classType = new TypeToken<List<Integer>>() {}.getType();
+                participants = new Gson().fromJson(cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS")), classType);
+
+                String duration = cursor.getString(cursor.getColumnIndexOrThrow("DURATION"));
+                String evtDescription = cursor.getString(cursor.getColumnIndexOrThrow("EVT_DESCRIPTION"));
+
+                Event event = new Event(evtId, evtName, hostId, evtDescription, time, null, location, timeslots, participants, type, true, true, duration);
+                allEvents.add(event);
+                cursor.moveToNext();
+            }
+        }
+
+        return allEvents;
+    }
+
+    /**
+     * get my event history for the profile page
+     * @return
+     * @author Lucy Shi
+     */
+    public List<Event> getMyEventHistory(int myId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        List<Event> allEvents = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM EVENT_TABLE",null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+
+                // check whether or not to add the evnt to the list
+                String evtParticipants = cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS"));
+                Type evtClassType = new TypeToken<List<Integer>>() {
+                }.getType();
+                List<Integer> participantsList = new Gson().fromJson(evtParticipants, evtClassType);
+
+                if (!participantsList.contains(myId)) {
+                    cursor.moveToNext();
+                    continue;
+                }
+
+                String time = cursor.getString(cursor.getColumnIndexOrThrow("TIME"));
+                int evtId = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow("EVT_ID")));
+                String evtName = cursor.getString(cursor.getColumnIndexOrThrow("EVT_NAME"));
+                int hostId = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow("HOST_ID")));
+                String location = cursor.getString(cursor.getColumnIndexOrThrow("LOCATION"));
+                int type = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow("TYPE")));
+
+                Map<String, Integer> timeslots = new HashMap<>();
+                Type classType = new TypeToken<Map<String, Integer>>() {}.getType();
+                timeslots = new Gson().fromJson(cursor.getString(cursor.getColumnIndexOrThrow("TIMESLOTS")), classType);
+
+                List<Integer> participants = new ArrayList<>();
+                classType = new TypeToken<List<Integer>>() {}.getType();
+                participants = new Gson().fromJson(cursor.getString(cursor.getColumnIndexOrThrow("PARTICIPANTS")), classType);
+
+                String duration = cursor.getString(cursor.getColumnIndexOrThrow("DURATION"));
+                String evtDescription = cursor.getString(cursor.getColumnIndexOrThrow("EVT_DESCRIPTION"));
+
+                Event event = new Event(evtId, evtName, hostId, evtDescription, time, null, location, timeslots, participants, type, true, true, duration);
+                allEvents.add(event);
+                cursor.moveToNext();
+            }
+        }
+
+        return allEvents;
+    }
+
+    /**
      * Add user to event participants list
      * @param evtId
      * @param userId

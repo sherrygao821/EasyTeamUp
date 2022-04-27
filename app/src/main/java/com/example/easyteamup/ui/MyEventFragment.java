@@ -21,6 +21,7 @@ import com.example.easyteamup.EventAdapter;
 import com.example.easyteamup.EventDetail;
 import com.example.easyteamup.EventListAdapter;
 import com.example.easyteamup.EventModel;
+import com.example.easyteamup.MyApplication;
 import com.example.easyteamup.R;
 import com.example.easyteamup.classes.Event;
 import com.google.gson.Gson;
@@ -83,10 +84,11 @@ public class MyEventFragment extends Fragment {
      * @author Lucy Shi
      */
     private void getEventList() {
-        allEvents = db.getAllActivePublicEvents();
+        int myId = ((MyApplication) getActivity().getApplication()).getUser().getUserId();
+        allEvents = db.getAllMyEvents(myId);
 
         if(allEvents.size() == 0)
-            makeText(getActivity(), "No Available Events! Please Check Back Later or Create One!", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), "No Posted Event! Try Create One!", Toast.LENGTH_SHORT).show();
 
         for(Event e : allEvents) {
             int userId = e.getHostId();

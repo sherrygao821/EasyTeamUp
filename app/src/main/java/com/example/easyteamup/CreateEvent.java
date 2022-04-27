@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.example.easyteamup.classes.Event;
 import com.example.easyteamup.classes.Location;
 import com.example.easyteamup.classes.Time;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import java.io.IOException;

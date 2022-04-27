@@ -90,10 +90,11 @@ public class EventHistoryFragment extends Fragment {
      * @author Lucy Shi
      */
     private void getEventList() {
-        allEvents = db.getAllActivePublicEvents();
+        int myId = ((MyApplication) getActivity().getApplication()).getUser().getUserId();
+        allEvents = db.getMyEventHistory(myId);
 
         if(allEvents.size() == 0)
-            makeText(getActivity(), "No Available Events! Please Check Back Later or Create One!", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), "No Available Events! Please Join an Event or Create One!", Toast.LENGTH_SHORT).show();
 
         for(Event e : allEvents) {
             int userId = e.getHostId();
