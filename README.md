@@ -57,3 +57,5 @@ Here, you can choose the avatar you like and edit your personal information.
 <img src="img/toast.png" alt="toast" width="200"/>
 
 - Debug the instability of toast on the “Change Profile” page (an issue found in 2.4, that toast sometimes did not appear on some devices).
+
+- Users will get a snack-bar notifcation if and only if they just log in. The message will show how many new invitations and notifcations since users check out their notifcation page last time. 
