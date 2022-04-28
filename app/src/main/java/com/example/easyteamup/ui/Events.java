@@ -69,6 +69,7 @@ public class Events extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_events, container, false);
         db = new DatabaseHelper(getActivity());
+        int first = 0, second = 0;
 
         // Add adapter to the home page list view
         eventsListView = rootView.findViewById(R.id.eventsListView);
@@ -100,8 +101,11 @@ public class Events extends Fragment {
         if (temp.isJustLoggedIn()){
             int oldNotiCnt = temp.getReadNoti();
             Pair<Integer, Integer> newNoti = db.getNewNoti(temp.getUserId());
+            first = newNoti.first;;
+            if (newNoti.second < 0) second = 0;
+            else second = newNoti.second;
             Log.d("debug", "calling toast!");
-            Snackbar.make(rootView.findViewById(R.id.snackbar), String.format(getString(R.string.newNotiString), newNoti.first, newNoti.second), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(rootView.findViewById(R.id.snackbar), String.format(getString(R.string.newNotiString), first, second), Snackbar.LENGTH_LONG).show();
             temp.setJustLoggedIn(false);
         }
         return rootView;

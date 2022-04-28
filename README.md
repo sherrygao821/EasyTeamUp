@@ -9,9 +9,6 @@ On the log in page, please put in your email and a password to get access to the
 
 ## 2. Events
 
-![Screen Shot 2022-04-26 at 6.15.07 PM](/Users/xinrangao/Desktop/Screen Shot 2022-04-26 at 6.15.07 PM.png)
-
-![Screen Shot 2022-04-26 at 6.15.23 PM](/Users/xinrangao/Desktop/Screen Shot 2022-04-26 at 6.15.23 PM.png)
 
 The first page you will see is a list of active events for you to explore. Please scroll up and down to view more. You can see the details of the event, including event location, type, duration, description, etc.
 
