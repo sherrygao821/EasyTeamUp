@@ -36,9 +36,20 @@ By clicking on the green *add* button, you can now create your own event.
 
 ## 3. Notifications
 On the notification page you can view the notifications and invitations you received.
+Users will only be notified when:
+1. other users join/quit a hosted event
+2. time terminated for determining timeslots
+3. other users invite for an upcoming event
+4. other users accepted an invitation
+<img src="img/Notification_and_Invitations.png" alt="notification_page" width="200"/>
 
 ### Updates after Project 2.4
-- Users will get a snack-bar notifcation if and only if they just log in. The message will show how many new invitations and notifcations since users check out their notifcation page last time.
+- Users will get a snack-bar notifcation if and only if they just log in. 
+- The message will show how many new invitations and notifcations since users check out their notifcation page last time.
+- The app will keep track of the log in status of users and how many notification users have read/reacted to.
+- If users do not want to see the notifcation messsage, the message will no longer show  without logging out, even when the user reopen the app
+
+<img src="img/Notification_Message.png" alt="notification+_message" width="200"/>
 
 ## 4. Profile
 <img src="img/profile.png" alt="profile" width="200"/>
